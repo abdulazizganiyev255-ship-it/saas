@@ -9,7 +9,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { BottomNav } from './components/BottomNav';
-import { LandingPage } from './components/LandingPage';
+import { LandingPage } from './components/landing/LandingPage';
 import { TodayScreen } from './components/today/TodayScreen';
 import { PWAInstallBanner } from './components/PWAInstallBanner';
 import { OfflineIndicator } from './components/OfflineIndicator';
@@ -76,7 +76,7 @@ const MainAppContent: React.FC = () => {
       case 'goals':
         return <GoalsScreen />;
       case 'review':
-        return <WeeklyReviewScreen />;
+        return <WeeklyReviewScreen onNavigate={setCurrentTab} />;
       case 'leaderboard':
         return <LeaderboardScreen />;
       case 'settings':

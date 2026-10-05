@@ -1,4 +1,5 @@
-// MOCK DATA, Firestore'ga ulanmagan
+// MOCK DATA, not connected to Firestore. Real data comes from the leaderboard backend (Group 6).
+// Anti-cheat and aggregation must run server-side (serverless + Admin SDK), never in the client.
 
 export interface LeaderboardMember {
   id: string;
@@ -6,7 +7,7 @@ export interface LeaderboardMember {
   teamName: string;
   weeklyXP: number;
   consistencyScore: number; // 0-100
-  graceDaysLeft: number; // e.g. 2 out of 2
+  graceDaysUsed: number; // out of 2 per week
   isMe?: boolean;
 }
 
@@ -18,31 +19,24 @@ export interface TeamLeaderboard {
 }
 
 export const MOCK_LEADERBOARD_MEMBERS: LeaderboardMember[] = [
-  // Team Alpha
-  { id: '1', nickname: 'CyberFalcon', teamName: 'Alpha Vanguard', weeklyXP: 680, consistencyScore: 98, graceDaysLeft: 2 },
-  { id: '2', nickname: 'ZenCoder', teamName: 'Alpha Vanguard', weeklyXP: 610, consistencyScore: 92, graceDaysLeft: 2 },
-  { id: '3', nickname: 'Sardor_Dev', teamName: 'Alpha Vanguard', weeklyXP: 550, consistencyScore: 88, graceDaysLeft: 1, isMe: true },
-  { id: '4', nickname: 'ApexNinja', teamName: 'Alpha Vanguard', weeklyXP: 490, consistencyScore: 82, graceDaysLeft: 2 },
-  { id: '5', nickname: 'NovaSpark', teamName: 'Alpha Vanguard', weeklyXP: 420, consistencyScore: 75, graceDaysLeft: 1 },
-
-  // Team Beta
-  { id: '6', nickname: 'ByteMaster', teamName: 'Beta Titans', weeklyXP: 650, consistencyScore: 95, graceDaysLeft: 2 },
-  { id: '7', nickname: 'ShadowCoder', teamName: 'Beta Titans', weeklyXP: 580, consistencyScore: 90, graceDaysLeft: 2 },
-  { id: '8', nickname: 'PixelHero', teamName: 'Beta Titans', weeklyXP: 510, consistencyScore: 85, graceDaysLeft: 1 },
-  { id: '9', nickname: 'DataRunner', teamName: 'Beta Titans', weeklyXP: 460, consistencyScore: 80, graceDaysLeft: 2 },
-  { id: '10', nickname: 'CodeKnight', teamName: 'Beta Titans', weeklyXP: 390, consistencyScore: 70, graceDaysLeft: 0 },
-
-  // Team Gamma
-  { id: '11', nickname: 'EchoPhoenix', teamName: 'Gamma Wolves', weeklyXP: 620, consistencyScore: 94, graceDaysLeft: 2 },
-  { id: '12', nickname: 'VortexMind', teamName: 'Gamma Wolves', weeklyXP: 540, consistencyScore: 86, graceDaysLeft: 2 },
-  { id: '13', nickname: 'QuantumLearner', teamName: 'Gamma Wolves', weeklyXP: 480, consistencyScore: 81, graceDaysLeft: 1 },
-  { id: '14', nickname: 'AstroDev', teamName: 'Gamma Wolves', weeklyXP: 430, consistencyScore: 76, graceDaysLeft: 2 },
-  { id: '15', nickname: 'HyperLoop', teamName: 'Gamma Wolves', weeklyXP: 360, consistencyScore: 68, graceDaysLeft: 0 },
-
-  // Team Delta
-  { id: '16', nickname: 'IronFocus', teamName: 'Delta Strikers', weeklyXP: 590, consistencyScore: 91, graceDaysLeft: 2 },
-  { id: '17', nickname: 'PulseRider', teamName: 'Delta Strikers', weeklyXP: 520, consistencyScore: 84, graceDaysLeft: 1 },
-  { id: '18', nickname: 'LogicCraft', teamName: 'Delta Strikers', weeklyXP: 450, consistencyScore: 78, graceDaysLeft: 2 },
-  { id: '19', nickname: 'ChronoSeeker', teamName: 'Delta Strikers', weeklyXP: 400, consistencyScore: 72, graceDaysLeft: 1 },
-  { id: '20', nickname: 'SolarWind', teamName: 'Delta Strikers', weeklyXP: 330, consistencyScore: 65, graceDaysLeft: 0 },
+  { id: '1', nickname: 'Sardor_K', teamName: "Olov", weeklyXP: 670, consistencyScore: 81, graceDaysUsed: 1 },
+  { id: '2', nickname: 'Aziz_07', teamName: "Olov", weeklyXP: 640, consistencyScore: 72, graceDaysUsed: 1, isMe: true },
+  { id: '3', nickname: 'Madina', teamName: "Olov", weeklyXP: 590, consistencyScore: 77, graceDaysUsed: 0 },
+  { id: '4', nickname: 'Jasur_dev', teamName: "Olov", weeklyXP: 520, consistencyScore: 70, graceDaysUsed: 1 },
+  { id: '5', nickname: 'Nigora', teamName: "Olov", weeklyXP: 460, consistencyScore: 66, graceDaysUsed: 2 },
+  { id: '6', nickname: 'Dilshod_X', teamName: "Daryo", weeklyXP: 710, consistencyScore: 78, graceDaysUsed: 0 },
+  { id: '7', nickname: 'Zilola', teamName: "Daryo", weeklyXP: 540, consistencyScore: 70, graceDaysUsed: 1 },
+  { id: '8', nickname: 'Bekzod', teamName: "Daryo", weeklyXP: 480, consistencyScore: 68, graceDaysUsed: 2 },
+  { id: '9', nickname: 'Malika', teamName: "Daryo", weeklyXP: 470, consistencyScore: 69, graceDaysUsed: 0 },
+  { id: '10', nickname: 'Rustam', teamName: "Daryo", weeklyXP: 440, consistencyScore: 65, graceDaysUsed: 1 },
+  { id: '11', nickname: 'Kamola', teamName: "Tog'", weeklyXP: 690, consistencyScore: 74, graceDaysUsed: 2 },
+  { id: '12', nickname: 'Ulugbek', teamName: "Tog'", weeklyXP: 510, consistencyScore: 68, graceDaysUsed: 0 },
+  { id: '13', nickname: 'Shahlo', teamName: "Tog'", weeklyXP: 480, consistencyScore: 66, graceDaysUsed: 1 },
+  { id: '14', nickname: 'Farhod', teamName: "Tog'", weeklyXP: 450, consistencyScore: 67, graceDaysUsed: 2 },
+  { id: '15', nickname: 'Dildora', teamName: "Tog'", weeklyXP: 380, consistencyScore: 65, graceDaysUsed: 0 },
+  { id: '16', nickname: 'Otabek', teamName: "Yulduz", weeklyXP: 560, consistencyScore: 66, graceDaysUsed: 1 },
+  { id: '17', nickname: 'Laylo', teamName: "Yulduz", weeklyXP: 470, consistencyScore: 64, graceDaysUsed: 2 },
+  { id: '18', nickname: 'Sherzod', teamName: "Yulduz", weeklyXP: 440, consistencyScore: 62, graceDaysUsed: 0 },
+  { id: '19', nickname: 'Gulnora', teamName: "Yulduz", weeklyXP: 420, consistencyScore: 65, graceDaysUsed: 1 },
+  { id: '20', nickname: 'Anvar', teamName: "Yulduz", weeklyXP: 400, consistencyScore: 63, graceDaysUsed: 2 },
 ];

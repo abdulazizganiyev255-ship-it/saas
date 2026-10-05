@@ -7,6 +7,7 @@ import { getLanguageSessions } from './language';
 import { getTasks } from './study';
 import { getMonthTransactions } from './budget';
 import { addDays } from '../utils/format';
+import type { WeekDaily, DayStatus } from '../utils/weekly';
 
 let reviewsCache: { [key: string]: WeeklyReview } = {};
 
@@ -90,6 +91,33 @@ export async function saveWeeklyReview(
   return updated;
 }
 
+
+/**
+ * Daily breakdown for a Monday-start week (days collection only, no other reads).
+ * A day is "done" when at least one active habit is completed, "grace" when a freeze was used.
+ */
+export async function calculateWeekDaily(
+  uid: string,
+  monday: string,
+  habits: HabitDefinition[]
+): Promise<WeekDaily> {
+  const daysMap = await getDaysRange(uid, monday, addDays(monday, 6));
+  const dates: string[] = [];
+  const scores: number[] = [];
+  const status: DayStatus[] = [];
+  for (let i = 0; i < 7; i++) {
+    const date = addDays(monday, i);
+    const dayDoc = daysMap[date];
+    const res = dayDoc ? calculateDayScore(dayDoc, habits) : null;
+    dates.push(date);
+    scores.push(res ? res.score : 0);
+    if (res && res.completedCount >= 1) status.push('done');
+    else if (dayDoc?.isFreezeUsed) status.push('grace');
+    else status.push('none');
+  }
+  return { dates, scores, status };
+}
+
 /**
  * Auto-calculate stats for a 7-day period (Mon - Sun)
  */
@@ -102,6 +130,7 @@ export async function calculateWeekStats(
   avgScore: number;
   daysComplete: number;
   totalSpend: number;
+  totalIncome: number;
   spendByCategory: { [cat: string]: number };
   workoutsCount: number;
   languageMinutes: number;
@@ -161,6 +190,9 @@ export async function calculateWeekStats(
   );
 
   let totalSpend = 0;
+  const totalIncome = combinedTx
+    .filter((t) => t.date >= startDate && t.date <= endDate && t.type === 'income')
+    .reduce((sum, t) => sum + t.amountUZS, 0);
   const spendByCategory: { [cat: string]: number } = {};
 
   txInRange.forEach((t) => {
@@ -172,6 +204,7 @@ export async function calculateWeekStats(
     avgScore,
     daysComplete: completeDays,
     totalSpend,
+    totalIncome,
     spendByCategory,
     workoutsCount: workoutsInRange.length,
     languageMinutes: totalLangMin,

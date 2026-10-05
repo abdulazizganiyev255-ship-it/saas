@@ -7,6 +7,20 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // Public waitlist: write-only from the landing page. No reads, no deletes.
+    // Doc id = lowercased Telegram username (repeat submissions overwrite, no duplicates).
+    match /waitlist/{entryId} {
+      allow create, update: if request.resource.data.keys().hasOnly(['name', 'telegram', 'lang', 'createdAt'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.name.size() <= 60
+        && request.resource.data.telegram is string
+        && request.resource.data.telegram.matches('^@[A-Za-z0-9_]{5,32}$')
+        && entryId == request.resource.data.telegram.lower()
+        && request.resource.data.lang in ['uz', 'en']
+        && request.resource.data.createdAt == request.time;
+    }
+
     function isSignedIn() {
       return request.auth != null;
     }

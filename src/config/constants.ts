@@ -137,6 +137,15 @@ export const PRICING_PLANS: { [key: string]: PricingPlan } = {
   },
 };
 
+export const COHORT = {
+  seats: 20,
+  priceUSD: 15,
+  priceLabel: '$15',
+} as const;
+
+/** Public contact link, e.g. 'https://t.me/your_username'. Leave empty to hide the "Aloqa" link. */
+export const CONTACT_URL = 'https://t.me/abdulaziz0333';
+
 export const PLANNED_COLLECTIONS = [
   'days',
   'transactions',

@@ -6,6 +6,7 @@ import { DEFAULT_WEEKLY_SPLIT } from '../../config/constants';
 import { getWorkouts, saveWorkout, deleteWorkout, calculateProgressiveOverload } from '../../services/gym';
 import { getTodayDateString, getWeekdayNumber, formatDateDisplay, getMondayOfDate, addDays } from '../../utils/format';
 import { LogWorkoutModal } from './LogWorkoutModal';
+import { Modal } from '../common/Modal';
 import { ProGate } from '../common/ProGate';
 import {
   Dumbbell,
@@ -35,6 +36,7 @@ export const GymScreen: React.FC = () => {
   const todayStr = useMemo(() => getTodayDateString(userProfile?.timezone), [userProfile?.timezone]);
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -80,10 +82,9 @@ export const GymScreen: React.FC = () => {
 
   const handleDeleteWorkout = async (id: string) => {
     if (!user) return;
-    if (window.confirm(t('deleteWorkoutConfirm', language))) {
-      await deleteWorkout(user.uid, id);
-      setWorkouts((prev) => prev.filter((w) => w.id !== id));
-    }
+    await deleteWorkout(user.uid, id);
+    setWorkouts((prev) => prev.filter((w) => w.id !== id));
+    setDeleteTargetId(null);
   };
 
   return (
@@ -228,7 +229,7 @@ export const GymScreen: React.FC = () => {
                       </span>
                     )}
                     <button
-                      onClick={() => handleDeleteWorkout(w.id)}
+                      onClick={() => setDeleteTargetId(w.id)}
                       className="tap-target text-slate-400 hover:text-rose-600 transition"
                       aria-label="Delete"
                     >
@@ -281,6 +282,24 @@ export const GymScreen: React.FC = () => {
         workoutsHistory={workouts}
       />
     </div>
+      <Modal isOpen={deleteTargetId !== null} onClose={() => setDeleteTargetId(null)} title={t('deleteWorkoutConfirm', language)}>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => setDeleteTargetId(null)}
+            className="tap-target flex-1 rounded-xl bg-token-raised px-4 py-2 text-sm font-bold text-token-text"
+          >
+            {language === 'uz' ? 'Bekor qilish' : 'Cancel'}
+          </button>
+          <button
+            type="button"
+            onClick={() => deleteTargetId && handleDeleteWorkout(deleteTargetId)}
+            className="tap-target flex-1 rounded-xl bg-token-danger px-4 py-2 text-sm font-bold text-token-on-accent"
+          >
+            {language === 'uz' ? "O'chirish" : 'Delete'}
+          </button>
+        </div>
+      </Modal>
     </ProGate>
   );
 };
