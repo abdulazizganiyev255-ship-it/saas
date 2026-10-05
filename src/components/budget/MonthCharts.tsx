@@ -24,14 +24,10 @@ interface MonthChartsProps {
 }
 
 const CATEGORY_COLORS = [
-  '#f43f5e', // rose-500
-  '#06b6d4', // cyan-500
-  '#10b981', // emerald-500
-  '#f59e0b', // amber-500
-  '#8b5cf6', // violet-500
-  '#ec4899', // pink-500
-  '#3b82f6', // blue-500
-  '#64748b', // slate-500
+  'var(--cat-1)',
+  'var(--cat-2)',
+  'var(--cat-3)',
+  'var(--cat-4)',
 ];
 
 export const MonthCharts: React.FC<MonthChartsProps> = ({
@@ -82,8 +78,8 @@ export const MonthCharts: React.FC<MonthChartsProps> = ({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       {/* Donut Chart: Expenses by Category */}
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
+      <div className="rounded-2xl border border-token-raised bg-token-card p-5 shadow-sm transition-colors">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-token-muted mb-2">
           {t('expenseByCategory', language)}
         </h3>
 
@@ -110,10 +106,10 @@ export const MonthCharts: React.FC<MonthChartsProps> = ({
                   language === 'uz' ? 'Xarajat' : 'Expense',
                 ]}
                 contentStyle={{
-                  backgroundColor: '#0f172a',
+                  backgroundColor: 'var(--card)',
                   borderRadius: '12px',
-                  border: '1px solid #334155',
-                  color: '#fff',
+                  border: '1px solid var(--raised)',
+                  color: 'var(--text)',
                   fontSize: '12px',
                 }}
               />
@@ -126,7 +122,7 @@ export const MonthCharts: React.FC<MonthChartsProps> = ({
           {donutData.slice(0, 6).map((item, idx) => (
             <span
               key={item.name}
-              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-300 rounded-md bg-slate-100 dark:bg-slate-800 px-2 py-0.5"
+              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-token-text rounded-md bg-token-raised px-2 py-0.5"
             >
               <span
                 className="h-2 w-2 rounded-full"
@@ -140,12 +136,12 @@ export const MonthCharts: React.FC<MonthChartsProps> = ({
       </div>
 
       {/* Column Chart: Expenses per Day with Horizontal Limit Line */}
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
+      <div className="rounded-2xl border border-token-raised bg-token-card p-5 shadow-sm transition-colors">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-token-muted">
             {t('expenseByDay', language)}
           </h3>
-          <span className="text-[10px] text-amber-500 font-bold">
+          <span className="text-[10px] text-token-warning font-bold">
             Limit: {formatUZS(dailyFoodLimit)} {t('currencyUzs', language)}
           </span>
         </div>
@@ -153,34 +149,34 @@ export const MonthCharts: React.FC<MonthChartsProps> = ({
         <div className="h-56 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={columnData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
-              <XAxis dataKey="day" tick={{ fontSize: 10, fill: '#94a3b8' }} interval={3} />
-              <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} />
+              <XAxis dataKey="day" tick={{ fontSize: 10, fill: 'var(--muted)' }} interval={3} />
+              <YAxis tick={{ fontSize: 10, fill: 'var(--muted)' }} />
               <Tooltip
                 formatter={(_val: any, _name: any, item: any) => [
                   item.payload.formatted,
                   language === 'uz' ? 'Kunlik xarajat' : 'Daily expense',
                 ]}
                 contentStyle={{
-                  backgroundColor: '#0f172a',
+                  backgroundColor: 'var(--card)',
                   borderRadius: '12px',
-                  border: '1px solid #334155',
-                  color: '#fff',
+                  border: '1px solid var(--raised)',
+                  color: 'var(--text)',
                   fontSize: '12px',
                 }}
               />
               {/* Horizontal daily limit line */}
               <ReferenceLine
                 y={dailyFoodLimit}
-                stroke="#f59e0b"
+                stroke="var(--warning)"
                 strokeDasharray="4 4"
                 label={{
                   value: 'Limit',
-                  fill: '#f59e0b',
+                  fill: 'var(--warning)',
                   fontSize: 10,
                   position: 'top',
                 }}
               />
-              <Bar dataKey="amount" fill="#6366f1" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="amount" fill="var(--cat-4)" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

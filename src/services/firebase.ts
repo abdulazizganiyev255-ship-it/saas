@@ -30,7 +30,7 @@ import {
 import firebaseConfig from '../../firebase-applet-config.json';
 
 // Suppress internal Firestore offline/retry log noise in console
-setLogLevel('silent');
+setLogLevel('error');
 
 const app = initializeApp(firebaseConfig);
 

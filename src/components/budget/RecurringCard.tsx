@@ -3,7 +3,7 @@ import type { RecurringTemplate, Transaction } from '../../types';
 import { formatUZS } from '../../utils/format';
 import { useAuth } from '../../contexts/AuthContext';
 import { t } from '../../i18n';
-import { Repeat, Plus, Check } from 'lucide-react';
+import { Repeat, Plus } from 'lucide-react';
 
 interface RecurringCardProps {
   templates: RecurringTemplate[];
@@ -30,12 +30,12 @@ export const RecurringCard: React.FC<RecurringCardProps> = ({
   }
 
   return (
-    <div className="rounded-2xl border border-indigo-200/80 bg-indigo-50/50 p-4 sm:p-5 dark:border-indigo-900/60 dark:bg-indigo-950/20 transition-colors">
+    <div className="rounded-2xl border border-token-raised bg-token-card p-4 sm:p-5 transition-colors">
       <div className="flex items-center gap-2 mb-3">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600 text-white">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-token-cat-4 text-white">
           <Repeat className="h-4 w-4" />
         </div>
-        <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-token-cat-4-text">
           {t('recurringThisMonthHeading', language)}
         </h3>
       </div>
@@ -44,20 +44,20 @@ export const RecurringCard: React.FC<RecurringCardProps> = ({
         {pendingTemplates.map((tpl) => (
           <div
             key={tpl.id}
-            className="flex items-center justify-between rounded-xl border border-slate-200/70 bg-white p-3 dark:border-slate-800 dark:bg-slate-900 shadow-2xs"
+            className="flex items-center justify-between rounded-xl border border-token-raised bg-token-raised p-3 shadow-2xs"
           >
             <div className="min-w-0 pr-2">
-              <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
+              <p className="text-sm font-bold text-token-text truncate">
                 {tpl.title}
               </p>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+              <p className="text-[11px] text-token-muted">
                 {tpl.category} · {formatUZS(tpl.amountUZS)} {t('currencyUzs', language)}
               </p>
             </div>
 
             <button
               onClick={() => onAddRecurringTx(tpl)}
-              className="tap-target inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-indigo-700 active:scale-95 transition"
+              className="tap-target inline-flex items-center gap-1.5 rounded-xl bg-token-accent text-token-on-accent px-3 py-1.5 text-xs font-bold shadow-sm active:scale-95 transition"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>{t('addRecurringQuick', language)}</span>
