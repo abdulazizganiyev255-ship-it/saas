@@ -1,0 +1,6 @@
+{
+  "name": "Life OS",
+  "description": "Mobile-first personal life-tracking dashboard for students and young founders.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

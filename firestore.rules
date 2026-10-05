@@ -1,0 +1,314 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net: default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Helper: read user document to check Pro plan status
+    function getUserData(userId) {
+      return get(/databases/$(database)/documents/users/$(userId)).data;
+    }
+
+    // Hard Pro check: user doc must have plan == "pro" and proUntil must be valid Firestore Timestamp
+    function isPro(userId) {
+      let userData = getUserData(userId);
+      return userData.plan == 'pro' && (
+        !('proUntil' in userData)
+        || userData.proUntil == null
+        || (userData.proUntil is timestamp && userData.proUntil > request.time)
+      );
+    }
+
+    // Validation helpers
+    // NOTE: Rules inspect up to the first 3 elements of list fields (top3, habits, exercises, nextTop3)
+    // due to Firestore rule expression limits. This validates sample items, but does NOT constitute 100% full array element validation.
+    function validTop3(list) {
+      return list is list && list.size() <= 3
+        && (list.size() < 1 || (list[0] is string && list[0].size() <= 200))
+        && (list.size() < 2 || (list[1] is string && list[1].size() <= 200))
+        && (list.size() < 3 || (list[2] is string && list[2].size() <= 200));
+    }
+
+    function validHabitItem(h) {
+      return h is map
+        && (!('label' in h) || (h.label is string && h.label.size() <= 60))
+        && (!('title' in h) || (h.title is string && h.title.size() <= 60));
+    }
+
+    function validHabits(habits) {
+      return habits is list && habits.size() <= 30
+        && (habits.size() < 1 || validHabitItem(habits[0]))
+        && (habits.size() < 2 || validHabitItem(habits[1]))
+        && (habits.size() < 3 || validHabitItem(habits[2]));
+    }
+
+    function validExercise(ex) {
+      return ex is map
+        && (!('sets' in ex) || (ex.sets is list && ex.sets.size() <= 20));
+    }
+
+    function validNextTop3(val) {
+      return (val is string && val.size() <= 900)
+        || (val is list && val.size() <= 3
+            && (val.size() < 1 || (val[0] is string && val[0].size() <= 300))
+            && (val.size() < 2 || (val[1] is string && val[1].size() <= 300))
+            && (val.size() < 3 || (val[2] is string && val[2].size() <= 300))
+           );
+    }
+
+    // User document isolation and security
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false; // Deny user enumeration
+
+      // Plan can ONLY be created as 'free' and proUntil must be absent or null
+      allow create: if isOwner(userId)
+        && request.resource.data.keys().hasOnly([
+          'uid', 'displayName', 'email', 'createdAt', 'updatedAt', 'language',
+          'timezone', 'currency', 'plan', 'proUntil', 'photoURL', 'settings'
+        ])
+        && request.resource.data.plan == 'free'
+        && (!('proUntil' in request.resource.data) || request.resource.data.proUntil == null)
+        && request.resource.data.email is string && request.resource.data.email.size() <= 100
+        && request.resource.data.displayName is string && request.resource.data.displayName.size() <= 100
+        && request.resource.data.createdAt is string && request.resource.data.createdAt.size() <= 40
+        && (!('settings' in request.resource.data) || (
+          request.resource.data.settings.keys().size() <= 20
+          && (!('habits' in request.resource.data.settings) || validHabits(request.resource.data.settings.habits))
+        ));
+
+      // Plan, proUntil, and createdAt can NEVER be changed by client on update
+      allow update: if isOwner(userId)
+        && request.resource.data.keys().hasOnly([
+          'uid', 'displayName', 'email', 'createdAt', 'updatedAt', 'language',
+          'timezone', 'currency', 'plan', 'proUntil', 'photoURL', 'settings'
+        ])
+        && request.resource.data.plan == resource.data.plan
+        && request.resource.data.createdAt == resource.data.createdAt
+        && (
+          ('proUntil' in resource.data)
+            ? (request.resource.data.proUntil == resource.data.proUntil)
+            : (!('proUntil' in request.resource.data) || request.resource.data.proUntil == null)
+        )
+        && (!('displayName' in request.resource.data) || (request.resource.data.displayName is string && request.resource.data.displayName.size() <= 100))
+        && (!('settings' in request.resource.data) || (
+          request.resource.data.settings.keys().size() <= 20
+          && (!('habits' in request.resource.data.settings) || validHabits(request.resource.data.settings.habits))
+        ));
+
+      allow delete: if false;
+
+      // --- SUBCOLLECTIONS WRITABLE FOR FREE USERS ---
+
+      // 1. Days (Habits, daily score, evening review)
+      match /days/{dayId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'date', 'top3', 'habitsDone', 'sleepHours', 'energy', 'meals',
+            'eveningReview', 'updatedAt', 'isFreezeUsed', 'deleted'
+          ])
+          && request.resource.data.date is string && request.resource.data.date.size() == 10
+          && (!('deleted' in request.resource.data) || request.resource.data.deleted is bool)
+          && (!('isFreezeUsed' in request.resource.data) || request.resource.data.isFreezeUsed is bool)
+          && (!('sleepHours' in request.resource.data) || (request.resource.data.sleepHours is number && request.resource.data.sleepHours >= 0 && request.resource.data.sleepHours <= 24))
+          && (!('energy' in request.resource.data) || (request.resource.data.energy is number && request.resource.data.energy >= 1 && request.resource.data.energy <= 5))
+          && (!('meals' in request.resource.data) || (request.resource.data.meals is number && request.resource.data.meals >= 0 && request.resource.data.meals <= 10))
+          && (!('eveningReview' in request.resource.data) || (request.resource.data.eveningReview is string && request.resource.data.eveningReview.size() <= 2000))
+          && (!('top3' in request.resource.data) || validTop3(request.resource.data.top3))
+          && (!('habitsDone' in request.resource.data) || (request.resource.data.habitsDone is map && request.resource.data.habitsDone.keys().size() <= 40));
+        allow delete: if isOwner(userId);
+      }
+
+      // 2. Transactions (Income, Expense, Food limit)
+      match /transactions/{txId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'date', 'amountUZS', 'amountUSD', 'type', 'category', 'paymentMethod',
+            'note', 'recurringTemplateId', 'createdAt', 'updatedAt', 'isRecurring', 'deleted'
+          ])
+          && (!('deleted' in request.resource.data) || request.resource.data.deleted is bool)
+          && request.resource.data.amountUZS is number && request.resource.data.amountUZS >= 0 && request.resource.data.amountUZS <= 10000000000
+          && request.resource.data.type in ['income', 'expense', 'savings']
+          && (!('category' in request.resource.data) || (request.resource.data.category is string && request.resource.data.category.size() <= 50))
+          && (!('paymentMethod' in request.resource.data) || (request.resource.data.paymentMethod is string && request.resource.data.paymentMethod.size() <= 50))
+          && (!('note' in request.resource.data) || (request.resource.data.note is string && request.resource.data.note.size() <= 500))
+          && request.resource.data.date is string && request.resource.data.date.size() == 10;
+        allow delete: if isOwner(userId);
+      }
+
+      // 3. Recurring (Monthly recurring payment templates)
+      match /recurring/{recId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'title', 'amountUZS', 'type', 'category', 'paymentMethod',
+            'dayOfMonth', 'active', 'createdAt', 'updatedAt', 'deleted'
+          ])
+          && (!('deleted' in request.resource.data) || request.resource.data.deleted is bool)
+          && request.resource.data.title is string && request.resource.data.title.size() <= 100
+          && request.resource.data.amountUZS is number && request.resource.data.amountUZS >= 0 && request.resource.data.amountUZS <= 10000000000
+          && request.resource.data.dayOfMonth is number && request.resource.data.dayOfMonth >= 1 && request.resource.data.dayOfMonth <= 31;
+        allow delete: if isOwner(userId);
+      }
+
+      // 4. Goals (Free users can create/update only goal_1, goal_2, goal_3; Pro unlimited)
+      match /goals/{goalId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && (isPro(userId) || goalId in ['goal_1', 'goal_2', 'goal_3'])
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'title', 'area', 'target', 'current', 'unit',
+            'deadline', 'status', 'createdAt', 'updatedAt', 'deleted'
+          ])
+          && (!('deleted' in request.resource.data) || request.resource.data.deleted is bool)
+          && request.resource.data.title is string && request.resource.data.title.size() <= 150
+          && request.resource.data.target is number && request.resource.data.target >= 0 && request.resource.data.target <= 1000000000
+          && request.resource.data.current is number && request.resource.data.current >= 0 && request.resource.data.current <= 1000000000
+          && request.resource.data.status in ['active', 'done', 'paused']
+          && (!('area' in request.resource.data) || (request.resource.data.area is string && request.resource.data.area.size() <= 50))
+          && (!('unit' in request.resource.data) || (request.resource.data.unit is string && request.resource.data.unit.size() <= 20))
+          && (!('deadline' in request.resource.data) || (request.resource.data.deadline is string && request.resource.data.deadline.size() == 10));
+
+        allow delete: if isOwner(userId);
+      }
+
+      // --- HARD PRO-GATED SUBCOLLECTIONS (Create & Update require Pro, Delete is owner-only) ---
+
+      // 5. Workouts
+      match /workouts/{workoutId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isPro(userId)
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'date', 'split', 'durationMin', 'bodyWeightKg', 'exercises',
+            'notes', 'createdAt', 'updatedAt', 'deleted'
+          ])
+          && (!('deleted' in request.resource.data) || request.resource.data.deleted is bool)
+          && request.resource.data.date is string && request.resource.data.date.size() == 10
+          && request.resource.data.split in ['Push', 'Pull', 'Legs', 'Upper', 'Lower', 'Cardio', 'Recovery']
+          && (!('exercises' in request.resource.data) || (
+            request.resource.data.exercises is list
+            && request.resource.data.exercises.size() <= 50
+            && (request.resource.data.exercises.size() < 1 || validExercise(request.resource.data.exercises[0]))
+            && (request.resource.data.exercises.size() < 2 || validExercise(request.resource.data.exercises[1]))
+            && (request.resource.data.exercises.size() < 3 || validExercise(request.resource.data.exercises[2]))
+          ))
+          && (!('durationMin' in request.resource.data) || (request.resource.data.durationMin is number && request.resource.data.durationMin >= 0 && request.resource.data.durationMin <= 600))
+          && (!('bodyWeightKg' in request.resource.data) || (request.resource.data.bodyWeightKg is number && request.resource.data.bodyWeightKg >= 0 && request.resource.data.bodyWeightKg <= 300))
+          && (!('notes' in request.resource.data) || (request.resource.data.notes is string && request.resource.data.notes.size() <= 1000));
+        allow delete: if isOwner(userId);
+      }
+
+      // 6. Courses
+      match /courses/{courseId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isPro(userId)
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'name', 'code', 'lectureTeacher', 'seminarTeacher', 'professor',
+            'credits', 'color', 'createdAt', 'updatedAt', 'deleted'
+          ])
+          && (!('deleted' in request.resource.data) || request.resource.data.deleted is bool)
+          && request.resource.data.name is string && request.resource.data.name.size() <= 100;
+        allow delete: if isOwner(userId);
+      }
+
+      // 7. Timetable (weekday 1-7)
+      match /timetable/{slotId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isPro(userId)
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'weekday', 'startTime', 'endTime', 'courseId', 'type',
+            'weekParity', 'room', 'createdAt', 'updatedAt', 'deleted'
+          ])
+          && (!('deleted' in request.resource.data) || request.resource.data.deleted is bool)
+          && request.resource.data.weekday is number && request.resource.data.weekday >= 1 && request.resource.data.weekday <= 7
+          && request.resource.data.startTime is string && request.resource.data.startTime.size() <= 10
+          && request.resource.data.type in ['lecture', 'seminar']
+          && request.resource.data.weekParity in ['every', 'even', 'odd'];
+        allow delete: if isOwner(userId);
+      }
+
+      // 8. Tasks (status in ['todo', 'doing', 'done'])
+      match /tasks/{taskId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isPro(userId)
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'title', 'courseId', 'type', 'due', 'status',
+            'priority', 'estMinutes', 'createdAt', 'updatedAt', 'deleted'
+          ])
+          && (!('deleted' in request.resource.data) || request.resource.data.deleted is bool)
+          && request.resource.data.title is string && request.resource.data.title.size() <= 200
+          && request.resource.data.status in ['todo', 'doing', 'done'];
+        allow delete: if isOwner(userId);
+      }
+
+      // 9. Notes (Lecture konspekts)
+      match /notes/{noteId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isPro(userId)
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'id', 'courseId', 'date', 'topic', 'konspektDone', 'createdAt', 'updatedAt', 'deleted'
+          ])
+          && (!('deleted' in request.resource.data) || request.resource.data.deleted is bool)
+          && request.resource.data.date is string && request.resource.data.date.size() == 10
+          && (!('topic' in request.resource.data) || (request.resource.data.topic is string && request.resource.data.topic.size() <= 300));
+        allow delete: if isOwner(userId);
+      }
+
+      // 10. Language (Practice session logs & profile)
+      match /language/{docId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isPro(userId)
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'date', 'language', 'minutes', 'newWords', 'skills',
+            'notes', 'targetMinutes', 'targetLanguage', 'createdAt', 'updatedAt', 'deleted'
+          ])
+          && (!('deleted' in request.resource.data) || request.resource.data.deleted is bool)
+          && (!('minutes' in request.resource.data) || (request.resource.data.minutes is number && request.resource.data.minutes >= 0 && request.resource.data.minutes <= 1440))
+          && (!('skills' in request.resource.data) || (request.resource.data.skills is list && request.resource.data.skills.size() <= 10));
+        allow delete: if isOwner(userId);
+      }
+
+      // 11. Reviews (Weekly reviews & retro)
+      match /reviews/{weekKey} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && isPro(userId)
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'id', 'weekKey', 'startDate', 'endDate', 'avgScore', 'daysComplete',
+            'totalSpend', 'spendByCategory', 'workoutsCount', 'languageMinutes',
+            'tasksCompleted', 'whatWorked', 'whatBlocked', 'nextTop3', 'stats',
+            'createdAt', 'updatedAt', 'deleted'
+          ])
+          && (!('deleted' in request.resource.data) || request.resource.data.deleted is bool)
+          && (!('whatWorked' in request.resource.data) || (request.resource.data.whatWorked is string && request.resource.data.whatWorked.size() <= 2000))
+          && (!('whatBlocked' in request.resource.data) || (request.resource.data.whatBlocked is string && request.resource.data.whatBlocked.size() <= 2000))
+          && (!('spendByCategory' in request.resource.data) || (request.resource.data.spendByCategory is map && request.resource.data.spendByCategory.keys().size() <= 30))
+          && (!('nextTop3' in request.resource.data) || validNextTop3(request.resource.data.nextTop3));
+        allow delete: if isOwner(userId);
+      }
+    }
+  }
+}

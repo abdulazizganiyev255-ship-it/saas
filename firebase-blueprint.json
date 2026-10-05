@@ -1,0 +1,213 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile with personal configurations and plan",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 255 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "language": { "type": "string", "enum": ["uz", "en"] },
+        "timezone": { "type": "string", "maxLength": 50 },
+        "currency": { "type": "string", "maxLength": 10 },
+        "plan": { "type": "string", "enum": ["free"] },
+        "settings": { "type": "object" }
+      },
+      "required": ["displayName", "email", "createdAt", "language", "timezone", "currency", "plan", "settings"]
+    },
+    "Day": {
+      "title": "Day Plan",
+      "description": "Daily tracking document",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "top3": { "type": "array" },
+        "habitsDone": { "type": "object" },
+        "sleepHours": { "type": "number" },
+        "energy": { "type": "integer" },
+        "meals": { "type": "integer" },
+        "eveningReview": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "isFreezeUsed": { "type": "boolean" }
+      },
+      "required": ["top3", "habitsDone", "sleepHours", "energy", "meals", "eveningReview", "updatedAt"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Budget expense, income, or savings transaction record",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "type": { "type": "string", "enum": ["income", "expense", "savings"] },
+        "category": { "type": "string" },
+        "amountUZS": { "type": "integer" },
+        "amountUSD": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["cash", "card", "click_payme", "other"] },
+        "note": { "type": "string" },
+        "recurringTemplateId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["date", "type", "category", "amountUZS", "paymentMethod", "createdAt"]
+    },
+    "Recurring": {
+      "title": "Recurring Template",
+      "description": "Recurring monthly budget template (subscriptions, bills)",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "amountUZS": { "type": "integer" },
+        "dayOfMonth": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "amountUZS", "dayOfMonth"]
+    },
+    "Workout": {
+      "title": "Workout",
+      "description": "Logged gym workout session with progressive overload",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "split": { "type": "string", "enum": ["Push", "Pull", "Legs", "Upper", "Lower", "Cardio", "Recovery"] },
+        "exercises": { "type": "array" },
+        "durationMin": { "type": "integer" },
+        "bodyWeightKg": { "type": "number" },
+        "notes": { "type": "string" }
+      },
+      "required": ["date", "split", "exercises", "durationMin"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Academic course information",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "code": { "type": "string" },
+        "lectureTeacher": { "type": "string" },
+        "seminarTeacher": { "type": "string" }
+      },
+      "required": ["name", "code"]
+    },
+    "Timetable": {
+      "title": "Timetable Slot",
+      "description": "Class timetable slot with week parity",
+      "type": "object",
+      "properties": {
+        "weekday": { "type": "integer" },
+        "startTime": { "type": "string" },
+        "courseId": { "type": "string" },
+        "type": { "type": "string", "enum": ["lecture", "seminar"] },
+        "weekParity": { "type": "string", "enum": ["every", "even", "odd"] },
+        "room": { "type": "string" }
+      },
+      "required": ["weekday", "startTime", "courseId", "type", "weekParity", "room"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "University and personal task with priority and deadline",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "courseId": { "type": "string" },
+        "type": { "type": "string", "enum": ["practical", "homework", "exam", "project", "reading"] },
+        "due": { "type": "string" },
+        "status": { "type": "string", "enum": ["todo", "doing", "done"] },
+        "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+        "estMinutes": { "type": "integer" }
+      },
+      "required": ["title", "due", "status", "priority"]
+    },
+    "Note": {
+      "title": "Note",
+      "description": "Academic lecture or seminar konspekt note",
+      "type": "object",
+      "properties": {
+        "courseId": { "type": "string" },
+        "date": { "type": "string" },
+        "topic": { "type": "string" },
+        "konspektDone": { "type": "boolean" }
+      },
+      "required": ["courseId", "date", "konspektDone"]
+    },
+    "LanguageSession": {
+      "title": "Language Session",
+      "description": "Daily language practice session",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "language": { "type": "string" },
+        "minutes": { "type": "integer" },
+        "newWords": { "type": "integer" },
+        "skills": { "type": "array" },
+        "notes": { "type": "string" }
+      },
+      "required": ["date", "language", "minutes", "newWords", "skills"]
+    },
+    "Goal": {
+      "title": "Goal",
+      "description": "Target goal with progress tracking",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "area": { "type": "string" },
+        "target": { "type": "number" },
+        "current": { "type": "number" },
+        "unit": { "type": "string" },
+        "deadline": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "done", "paused"] }
+      },
+      "required": ["title", "target", "current", "unit", "deadline", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User account document containing settings and profile info"
+    },
+    "/users/{userId}/days/{dayId}": {
+      "schema": "Day",
+      "description": "Daily tracking logs and habit check-ins"
+    },
+    "/users/{userId}/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Financial expense and income entries"
+    },
+    "/users/{userId}/recurring/{recurringId}": {
+      "schema": "Recurring",
+      "description": "Recurring budget commitments and subscriptions"
+    },
+    "/users/{userId}/workouts/{workoutId}": {
+      "schema": "Workout",
+      "description": "Gym exercises and workout logs"
+    },
+    "/users/{userId}/courses/{courseId}": {
+      "schema": "Course",
+      "description": "University academic courses"
+    },
+    "/users/{userId}/timetable/{timetableId}": {
+      "schema": "Timetable",
+      "description": "Class schedule slots by day of week"
+    },
+    "/users/{userId}/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "University and personal tasks with deadlines"
+    },
+    "/users/{userId}/notes/{noteId}": {
+      "schema": "Note",
+      "description": "Academic and quick personal notes"
+    },
+    "/users/{userId}/language/{languageId}": {
+      "schema": "LanguageSession",
+      "description": "Language practice logs and vocabulary items"
+    },
+    "/users/{userId}/goals/{goalId}": {
+      "schema": "Goal",
+      "description": "Quarterly and yearly personal goals with milestone tracking"
+    },
+    "/users/{userId}/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Weekly and monthly reflection reviews"
+    }
+  }
+}
