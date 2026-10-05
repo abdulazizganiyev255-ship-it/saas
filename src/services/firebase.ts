@@ -21,7 +21,6 @@ import {
   updateDoc,
   deleteDoc,
   onSnapshot,
-  getDocFromServer,
   serverTimestamp,
   Timestamp,
   writeBatch,
@@ -46,18 +45,6 @@ export async function clearFirestorePersistence(): Promise<void> {
     console.warn('Error clearing Firestore IndexedDB persistence:', err);
   }
 }
-
-// Validate connection to Firestore on boot
-async function testConnection() {
-  try {
-    await getDocFromServer(doc(db, 'test', 'connection'));
-  } catch (error) {
-    if (error instanceof Error && (error.message.includes('the client is offline') || error.message.includes('unavailable'))) {
-      console.warn('Firestore operating in offline cache mode until connection is re-established.');
-    }
-  }
-}
-testConnection();
 
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
