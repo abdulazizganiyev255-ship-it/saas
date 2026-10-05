@@ -15,6 +15,7 @@ import {
   terminate,
   clearIndexedDbPersistence,
   getFirestore,
+  setLogLevel,
   doc,
   getDoc,
   setDoc,
@@ -27,6 +28,9 @@ import {
   type DocumentSnapshot,
 } from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
+
+// Suppress internal Firestore offline/retry log noise in console
+setLogLevel('silent');
 
 const app = initializeApp(firebaseConfig);
 

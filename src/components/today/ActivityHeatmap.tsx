@@ -48,7 +48,7 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
         <div>
           <h3 className="text-sm font-bold text-token-text flex items-center gap-1.5">
-            <Sparkles className="h-4 w-4 text-token-cat-4" />
+            <Sparkles className="h-4 w-4 text-token-cat-4-text" />
             <span>{t('statsSectionTitle', language)}</span>
           </h3>
           <p className="text-xs text-token-muted">

@@ -322,7 +322,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
               onClick={() => setSelectedDate(todayStr)}
               className="tap-target flex items-center gap-1 rounded-xl bg-token-raised px-3 py-1.5 text-xs font-semibold text-token-text transition"
             >
-              <RotateCcw className="h-3.5 w-3.5 text-token-cat-4" />
+              <RotateCcw className="h-3.5 w-3.5 text-token-cat-4-text" />
               <span>{t('jumpToToday', language)}</span>
             </button>
           )}
@@ -357,7 +357,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
 
       {/* Freeze applied toast notification */}
       {freezeAppliedToast && (
-        <div className="flex items-center gap-2 rounded-xl bg-token-raised border border-token-cat-2 p-3 text-xs font-bold text-token-cat-2 animate-fade-in">
+        <div className="flex items-center gap-2 rounded-xl bg-token-raised border border-token-cat-2 p-3 text-xs font-bold text-token-cat-2-text animate-fade-in">
           <Snowflake className="h-4 w-4" />
           <span>{t('freezeAppliedSuccess', language)}</span>
         </div>
@@ -423,13 +423,13 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
               <div
                 className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-semibold border ${
                   currentDay.isFreezeUsed
-                    ? 'bg-token-raised border-token-cat-2 text-token-cat-2'
+                    ? 'bg-token-raised border-token-cat-2 text-token-cat-2-text'
                     : freezeAvailableForWeek
                     ? 'bg-token-raised border-token-raised text-token-text'
                     : 'bg-token-raised border-token-raised text-token-muted'
                 }`}
               >
-                <Snowflake className="h-3 w-3 text-token-cat-2" />
+                <Snowflake className="h-3 w-3 text-token-cat-2-text" />
                 <span>
                   {currentDay.isFreezeUsed
                     ? t('freezeUsedBadge', language)
@@ -440,7 +440,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
               {!isComplete && !currentDay.isFreezeUsed && freezeAvailableForWeek && (
                 <button
                   onClick={handleApplyFreeze}
-                  className="tap-target text-[11px] font-bold text-token-cat-2 underline underline-offset-2"
+                  className="tap-target text-[11px] font-bold text-token-cat-2-text underline underline-offset-2"
                 >
                   {t('useFreezeBtn', language)}
                 </button>
@@ -461,7 +461,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
       <div className="rounded-2xl border border-token-raised bg-token-card p-5 shadow-sm transition-colors">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-bold uppercase tracking-wider text-token-muted flex items-center gap-1.5">
-            <Sparkles className="h-4 w-4 text-token-cat-4" />
+            <Sparkles className="h-4 w-4 text-token-cat-4-text" />
             <span>{t('top3Heading', language)}</span>
           </h2>
           <span className="text-[10px] text-token-muted font-medium">1-3</span>
@@ -478,7 +478,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
 
             return (
               <div key={idx} className="relative flex items-center">
-                <span className="absolute left-3.5 text-xs font-bold text-token-cat-4">
+                <span className="absolute left-3.5 text-xs font-bold text-token-cat-4-text">
                   {idx + 1}.
                 </span>
                 <input
@@ -543,7 +543,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
       <div className="rounded-2xl border border-token-raised bg-token-raised p-4 sm:p-5 transition-colors space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <GraduationCap className="h-4 w-4 text-token-cat-2" />
+            <GraduationCap className="h-4 w-4 text-token-cat-2-text" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-token-text">
               {t('todayClassesShortcut', language)}
             </h3>
@@ -551,7 +551,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           {onNavigate && (
             <button
               onClick={() => onNavigate('study')}
-              className="tap-target text-xs font-bold text-token-cat-2 hover:underline flex items-center gap-0.5"
+              className="tap-target text-xs font-bold text-token-cat-2-text hover:underline flex items-center gap-0.5"
             >
               <span>Study</span>
               <ArrowRight className="h-3 w-3" />
@@ -647,7 +647,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           {onNavigate && (
             <button
               onClick={() => onNavigate('language')}
-              className="tap-target shrink-0 text-xs font-bold text-token-cat-2 hover:underline flex items-center gap-0.5"
+              className="tap-target shrink-0 text-xs font-bold text-token-cat-2-text hover:underline flex items-center gap-0.5"
             >
               <span>Lang</span>
               <ArrowRight className="h-3 w-3" />
@@ -673,7 +673,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           {onNavigate && (
             <button
               onClick={() => onNavigate('goals')}
-              className="tap-target shrink-0 text-xs font-bold text-token-cat-4 hover:underline flex items-center gap-0.5"
+              className="tap-target shrink-0 text-xs font-bold text-token-cat-4-text hover:underline flex items-center gap-0.5"
             >
               <span>Goals</span>
               <ArrowRight className="h-3 w-3" />
@@ -687,7 +687,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
         {/* Sleep Hours Stepper / Input */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-token-raised text-token-cat-4">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-token-raised text-token-cat-4-text">
               <MoonStar className="h-4 w-4" />
             </div>
             <div>

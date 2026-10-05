@@ -296,7 +296,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
             <span className="text-[11px] font-bold uppercase tracking-wider text-token-muted">
               {language === 'uz' ? 'Kunlik Ovqat' : 'Daily Food Spend'}
             </span>
-            <Wallet className="h-4 w-4 text-token-cat-1" />
+            <Wallet className="h-4 w-4 text-token-cat-1-text" />
           </div>
           <p className="text-lg font-black text-token-text truncate">
             {formatUZS(todaySpend)}
@@ -315,7 +315,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
             <span className="text-[11px] font-bold uppercase tracking-wider text-token-muted">
               {t('workoutsThisWeek', language)}
             </span>
-            <Dumbbell className="h-4 w-4 text-token-cat-2" />
+            <Dumbbell className="h-4 w-4 text-token-cat-2-text" />
           </div>
           <div className="flex items-baseline gap-1">
             <span className="text-2xl font-black text-token-text">
@@ -323,7 +323,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
             </span>
             <span className="text-xs font-bold text-token-muted">/ 6 target</span>
           </div>
-          <p className="text-[10px] text-token-cat-2 font-semibold truncate">
+          <p className="text-[10px] text-token-cat-2-text font-semibold truncate">
             {language === 'uz' ? 'Zal jurnali' : 'Workout logs'} →
           </p>
         </div>
@@ -337,7 +337,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
             <span className="text-[11px] font-bold uppercase tracking-wider text-token-muted">
               {t('languageTitle', language)}
             </span>
-            <Languages className="h-4 w-4 text-token-cat-3" />
+            <Languages className="h-4 w-4 text-token-cat-3-text" />
           </div>
           <div className="flex items-baseline gap-1">
             <span className="text-2xl font-black text-token-text">
@@ -345,7 +345,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
             </span>
             <span className="text-xs font-bold text-token-muted">/ {languageTargetMin} min</span>
           </div>
-          <p className="text-[10px] text-token-cat-3 font-semibold truncate">
+          <p className="text-[10px] text-token-cat-3-text font-semibold truncate">
             {languageMinutesToday >= languageTargetMin
               ? (language === 'uz' ? '✓ Norma bajarildi' : '✓ Target hit')
               : (language === 'uz' ? `${languageTargetMin - languageMinutesToday}m qoldi` : `${languageTargetMin - languageMinutesToday}m left`)} →
@@ -361,7 +361,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
             <span className="text-[11px] font-bold uppercase tracking-wider text-token-muted">
               {language === 'uz' ? 'Yaqin Topshiriq' : 'Nearest Deadline'}
             </span>
-            <GraduationCap className="h-4 w-4 text-token-cat-4" />
+            <GraduationCap className="h-4 w-4 text-token-cat-4-text" />
           </div>
           {nearestTask ? (
             <div>
@@ -401,7 +401,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
           <div className="flex items-center justify-between mb-3">
             <div>
               <h3 className="text-xs font-bold uppercase tracking-wider text-token-muted flex items-center gap-1.5">
-                <BarChart2 className="h-4 w-4 text-token-cat-4" />
+                <BarChart2 className="h-4 w-4 text-token-cat-4-text" />
                 <span>{language === 'uz' ? '14 Kunlik Odatlar Balli Grafigi' : '14-Day Score Trend'}</span>
               </h3>
               <p className="text-[11px] text-token-muted">
@@ -493,7 +493,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
           <div className="rounded-3xl border border-token-raised bg-token-card p-5 sm:p-6 shadow-sm transition-colors">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-token-muted flex items-center gap-1.5">
-                <Scale className="h-4 w-4 text-token-cat-2" />
+                <Scale className="h-4 w-4 text-token-cat-2-text" />
                 <span>{t('bodyWeightChartTitle', language)}</span>
               </h3>
               <span className="text-xs font-black text-token-text">
@@ -544,7 +544,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
           onClick={() => onNavigate('budget')}
           className="tap-target flex flex-col items-center justify-center p-4 rounded-2xl border border-token-raised bg-token-card text-center transition"
         >
-          <Wallet className="h-6 w-6 text-token-cat-1 mb-1" />
+          <Wallet className="h-6 w-6 text-token-cat-1-text mb-1" />
           <span className="text-xs font-bold text-token-text">{t('navBudget', language)}</span>
         </button>
 
@@ -552,7 +552,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
           onClick={() => onNavigate('gym')}
           className="tap-target flex flex-col items-center justify-center p-4 rounded-2xl border border-token-raised bg-token-card text-center transition"
         >
-          <Dumbbell className="h-6 w-6 text-token-cat-2 mb-1" />
+          <Dumbbell className="h-6 w-6 text-token-cat-2-text mb-1" />
           <span className="text-xs font-bold text-token-text">{t('navGym', language)}</span>
         </button>
 
@@ -560,7 +560,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
           onClick={() => onNavigate('study')}
           className="tap-target flex flex-col items-center justify-center p-4 rounded-2xl border border-token-raised bg-token-card text-center transition"
         >
-          <GraduationCap className="h-6 w-6 text-token-cat-4 mb-1" />
+          <GraduationCap className="h-6 w-6 text-token-cat-4-text mb-1" />
           <span className="text-xs font-bold text-token-text">{t('navStudy', language)}</span>
         </button>
       </div>

@@ -121,7 +121,10 @@ export function subscribeToDayDoc(
       }
     },
     (error) => {
-      handleFirestoreError(error, OperationType.GET, `users/${uid}/days/${todayDateStr}`);
+      const errMsg = error?.message || String(error);
+      if (!errMsg.includes('unavailable') && !errMsg.includes('offline') && !errMsg.includes('Could not reach Cloud Firestore backend')) {
+        handleFirestoreError(error, OperationType.GET, `users/${uid}/days/${todayDateStr}`);
+      }
     }
   );
 }
