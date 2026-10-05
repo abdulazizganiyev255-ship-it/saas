@@ -40,17 +40,30 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onNavigate }) => {
   ];
 
   return (
-    <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 border-r border-slate-200/80 bg-white dark:border-slate-800/80 dark:bg-slate-950 transition-colors z-20">
+    <aside
+      className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 border-r transition-colors z-20"
+      style={{
+        backgroundColor: 'var(--card)',
+        borderColor: 'var(--raised)',
+        color: 'var(--text)',
+      }}
+    >
       {/* Brand logo & title */}
-      <div className="flex h-16 items-center gap-3 px-6 border-b border-slate-100 dark:border-slate-800/80">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 text-white shadow-md shadow-indigo-500/25">
+      <div
+        className="flex h-16 items-center gap-3 px-6 border-b"
+        style={{ borderColor: 'var(--raised)' }}
+      >
+        <div
+          className="flex h-10 w-10 items-center justify-center rounded-xl shadow-md"
+          style={{ backgroundColor: 'var(--accent)', color: 'var(--on-accent)' }}
+        >
           <Sparkles className="h-5 w-5" />
         </div>
         <div className="flex flex-col">
-          <span className="font-extrabold tracking-tight text-slate-900 dark:text-white text-lg">
+          <span className="font-extrabold tracking-tight text-lg" style={{ color: 'var(--text)' }}>
             {APP_NAME}
           </span>
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-indigo-500">
+          <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--accent)' }}>
             {t('step1Badge', language)}
           </span>
         </div>
@@ -66,16 +79,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onNavigate }) => {
               <button
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
-                className={`tap-target group flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all ${
+                className="tap-target group flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all"
+                style={
                   isActive
-                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-white'
-                }`}
+                    ? { backgroundColor: 'var(--accent)', color: 'var(--on-accent)' }
+                    : { color: 'var(--muted)' }
+                }
               >
                 <Icon
-                  className={`h-5 w-5 transition-transform group-hover:scale-110 ${
-                    isActive ? 'text-white' : 'text-slate-400 group-hover:text-indigo-500'
-                  }`}
+                  className="h-5 w-5 transition-transform group-hover:scale-110"
+                  style={{ color: isActive ? 'var(--on-accent)' : 'var(--muted)' }}
                 />
                 <span>{item.label}</span>
               </button>
@@ -84,14 +97,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onNavigate }) => {
         </nav>
 
         {/* Footer controls & Settings */}
-        <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800/80">
+        <div className="space-y-3 pt-4 border-t" style={{ borderColor: 'var(--raised)' }}>
           <button
             onClick={() => onNavigate('settings')}
-            className={`tap-target flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all ${
+            className="tap-target flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all"
+            style={
               currentTab === 'settings'
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-white'
-            }`}
+                ? { backgroundColor: 'var(--accent)', color: 'var(--on-accent)' }
+                : { color: 'var(--muted)' }
+            }
           >
             <SettingsIcon className="h-5 w-5" />
             <span>{t('navSettings', language)}</span>
@@ -99,32 +113,36 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onNavigate }) => {
 
           {/* User badge */}
           {userProfile && (
-            <div className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-800 dark:bg-slate-900/60">
+            <div
+              className="rounded-xl border p-3"
+              style={{ backgroundColor: 'var(--raised)', borderColor: 'var(--raised)' }}
+            >
               <div className="flex items-center justify-between">
                 <div className="min-w-0 pr-2">
-                  <p className="truncate text-xs font-bold text-slate-900 dark:text-white">
+                  <p className="truncate text-xs font-bold" style={{ color: 'var(--text)' }}>
                     {userProfile.displayName}
                   </p>
-                  <p className="truncate text-[11px] text-slate-500 dark:text-slate-400">
+                  <p className="truncate text-[11px]" style={{ color: 'var(--muted)' }}>
                     {userProfile.email}
                   </p>
                 </div>
                 <button
                   onClick={signOut}
                   title={t('signOut', language)}
-                  className="tap-target flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950/40 dark:hover:text-rose-400 transition"
+                  className="tap-target flex h-8 w-8 items-center justify-center rounded-lg transition"
+                  style={{ color: 'var(--danger)' }}
                 >
                   <LogOut className="h-4 w-4" />
                 </button>
               </div>
               <div className="mt-2 flex items-center gap-1 text-[10px] font-semibold">
                 {isPro ? (
-                  <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400">
+                  <span className="inline-flex items-center gap-1" style={{ color: 'var(--accent)' }}>
                     <Crown className="h-3 w-3" />
                     <span>Life OS PRO</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                  <span className="inline-flex items-center gap-1" style={{ color: 'var(--muted)' }}>
                     <ShieldCheck className="h-3 w-3" />
                     <span>{t('planFree', language)}</span>
                   </span>

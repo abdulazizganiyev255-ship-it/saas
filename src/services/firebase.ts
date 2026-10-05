@@ -47,6 +47,18 @@ export async function clearFirestorePersistence(): Promise<void> {
   }
 }
 
+// Validate connection to Firestore on boot
+async function testConnection() {
+  try {
+    await getDocFromServer(doc(db, 'test', 'connection'));
+  } catch (error) {
+    if (error instanceof Error && (error.message.includes('the client is offline') || error.message.includes('unavailable'))) {
+      console.warn('Firestore operating in offline cache mode until connection is re-established.');
+    }
+  }
+}
+testConnection();
+
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
@@ -80,8 +92,9 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
   const errMsg = error instanceof Error ? error.message : String(error);
   const isPermissionDenied = errMsg.includes('permission-denied') || errMsg.includes('Missing or insufficient permissions');
   const isInvalidArgument = errMsg.includes('invalid-argument') || errMsg.includes('Invalid argument');
+  const isOfflineUnavailable = errMsg.includes('unavailable') || errMsg.includes('offline') || errMsg.includes('Could not reach Cloud Firestore backend');
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && !isOfflineUnavailable) {
     let toastMessage = "Xatolik: Amal muvaffaqiyatsiz yakunlandi.";
     if (isPermissionDenied) {
       toastMessage = "Amal rad etildi: Ruxsat berilmadi yoki limitdan oshdi.";

@@ -155,7 +155,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
           },
           (error) => {
-            handleFirestoreError(error, OperationType.GET, `users/${currentUser.uid}`);
+            const errMsg = error?.message || String(error);
+            if (!errMsg.includes('unavailable') && !errMsg.includes('offline') && !errMsg.includes('Could not reach Cloud Firestore backend')) {
+              handleFirestoreError(error, OperationType.GET, `users/${currentUser.uid}`);
+            } else {
+              console.warn(`Firestore snapshot operating offline for users/${currentUser.uid}: ${errMsg}`);
+            }
           }
         );
       } catch (error) {
