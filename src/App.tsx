@@ -24,6 +24,7 @@ const StudyScreen = lazy(() => import('./components/study/StudyScreen').then((m)
 const LanguageScreen = lazy(() => import('./components/language/LanguageScreen').then((m) => ({ default: m.LanguageScreen })));
 const GoalsScreen = lazy(() => import('./components/goals/GoalsScreen').then((m) => ({ default: m.GoalsScreen })));
 const WeeklyReviewScreen = lazy(() => import('./components/review/WeeklyReviewScreen').then((m) => ({ default: m.WeeklyReviewScreen })));
+const LeaderboardScreen = lazy(() => import('./components/review/LeaderboardScreen').then((m) => ({ default: m.LeaderboardScreen })));
 const SettingsView = lazy(() => import('./components/SettingsView').then((m) => ({ default: m.SettingsView })));
 
 const MainAppContent: React.FC = () => {
@@ -76,6 +77,8 @@ const MainAppContent: React.FC = () => {
         return <GoalsScreen />;
       case 'review':
         return <WeeklyReviewScreen />;
+      case 'leaderboard':
+        return <LeaderboardScreen />;
       case 'settings':
         return <SettingsView />;
       default:

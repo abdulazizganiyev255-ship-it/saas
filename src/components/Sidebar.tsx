@@ -17,6 +17,7 @@ import {
   LogOut,
   ShieldCheck,
   Crown,
+  Trophy,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -37,6 +38,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onNavigate }) => {
     { id: 'language' as TabType, label: t('navLanguage', language), icon: Languages },
     { id: 'goals' as TabType, label: t('navGoals', language), icon: Target },
     { id: 'review' as TabType, label: t('navReview', language), icon: CalendarCheck },
+    { id: 'leaderboard' as TabType, label: t('navLeaderboard', language), icon: Trophy },
   ];
 
   return (

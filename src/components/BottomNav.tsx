@@ -8,6 +8,7 @@ import {
   Dumbbell,
   GraduationCap,
   Target,
+  Trophy,
 } from 'lucide-react';
 
 interface BottomNavProps {
@@ -23,13 +24,13 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onNavigate }) 
     { id: 'budget' as TabType, label: t('navBudget', language), icon: Wallet },
     { id: 'gym' as TabType, label: t('navGym', language), icon: Dumbbell },
     { id: 'study' as TabType, label: t('navStudy', language), icon: GraduationCap },
-    { id: 'goals' as TabType, label: t('navGoals', language), icon: Target },
+    { id: 'leaderboard' as TabType, label: t('navLeaderboard', language), icon: Trophy },
   ];
 
   return (
     <nav
       aria-label="Mobile Navigation"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-30 border-t border-slate-200/90 bg-white/95 backdrop-blur-lg dark:border-slate-800/90 dark:bg-slate-950/95 transition-colors pb-safe"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-30 border-t border-token-raised bg-token-card backdrop-blur-lg transition-colors pb-safe"
     >
       <div className="flex h-16 w-full items-center justify-around px-1 max-w-lg mx-auto">
         {navItems.map((item) => {
@@ -41,12 +42,12 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onNavigate }) 
               onClick={() => onNavigate(item.id)}
               className={`tap-target flex flex-1 flex-col items-center justify-center py-1 transition-all relative ${
                 isActive
-                  ? 'text-indigo-600 dark:text-indigo-400 font-bold'
-                  : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                  ? 'text-token-accent font-bold'
+                  : 'text-token-muted'
               }`}
             >
               {isActive && (
-                <span className="absolute top-1.5 h-1 w-6 rounded-full bg-indigo-600 dark:bg-indigo-400" />
+                <span className="absolute top-1.5 h-1 w-6 rounded-full bg-token-accent" />
               )}
               <Icon
                 className={`h-5 w-5 transition-transform ${

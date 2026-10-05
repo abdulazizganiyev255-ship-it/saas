@@ -220,4 +220,4 @@ export interface WeeklyReview {
   deleted?: boolean;
 }
 
-export type TabType = 'home' | 'today' | 'budget' | 'gym' | 'study' | 'language' | 'goals' | 'review' | 'settings';
+export type TabType = 'home' | 'today' | 'budget' | 'gym' | 'study' | 'language' | 'goals' | 'review' | 'leaderboard' | 'settings';
