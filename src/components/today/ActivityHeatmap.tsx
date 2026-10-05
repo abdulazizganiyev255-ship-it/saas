@@ -36,22 +36,22 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({
   }
 
   const getColorClass = (score: number, hasData: boolean, isFreeze: boolean) => {
-    if (isFreeze) return 'bg-cyan-500 hover:ring-2 hover:ring-cyan-300';
-    if (!hasData || score === 0) return 'bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700';
-    if (score < 40) return 'bg-emerald-300 dark:bg-emerald-950/80 hover:ring-2 hover:ring-emerald-400';
-    if (score < 70) return 'bg-emerald-500 dark:bg-emerald-700 hover:ring-2 hover:ring-emerald-300';
-    return 'bg-emerald-600 dark:bg-emerald-500 hover:ring-2 hover:ring-emerald-300';
+    if (isFreeze) return 'bg-token-cat-2';
+    if (!hasData || score === 0) return 'bg-token-raised';
+    if (score < 40) return 'bg-token-cat-1 opacity-50';
+    if (score < 70) return 'bg-token-cat-1 opacity-80';
+    return 'bg-token-accent';
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
+    <div className="rounded-2xl border border-token-raised bg-token-card p-4 sm:p-5 shadow-sm transition-colors text-token-text">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
         <div>
-          <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-            <Sparkles className="h-4 w-4 text-indigo-500" />
+          <h3 className="text-sm font-bold text-token-text flex items-center gap-1.5">
+            <Sparkles className="h-4 w-4 text-token-cat-4" />
             <span>{t('statsSectionTitle', language)}</span>
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-token-muted">
             {t('statsSectionSubtitle', language)}
           </p>
         </div>
@@ -59,7 +59,7 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({
         {!canSeeFullYear && (
           <button
             onClick={() => setModalOpen(true)}
-            className="tap-target inline-flex items-center gap-1 rounded-lg bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 text-[11px] font-semibold text-amber-600 dark:text-amber-400 self-start sm:self-auto hover:bg-amber-500/20 transition cursor-pointer"
+            className="tap-target inline-flex items-center gap-1 rounded-lg bg-token-raised border border-token-warning px-2.5 py-1 text-[11px] font-semibold text-token-warning self-start sm:self-auto hover:opacity-80 transition cursor-pointer"
           >
             <Lock className="h-3 w-3" />
             <span>{t('fullYearLocked', language)}</span>
@@ -91,11 +91,11 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({
                 className={`tap-target flex flex-col items-center justify-center rounded-md p-1 transition-all ${
                   canSeeFullYear ? 'h-5 w-5 sm:h-6 sm:w-6' : 'h-11 w-full min-w-[38px]'
                 } ${colorClass} ${
-                  isToday ? 'ring-2 ring-indigo-500 ring-offset-1 dark:ring-offset-slate-900' : ''
+                  isToday ? 'ring-2 ring-token-accent ring-offset-1' : ''
                 }`}
               >
                 {!canSeeFullYear && (
-                  <span className="text-[10px] font-bold text-slate-700 dark:text-slate-200 pointer-events-none">
+                  <span className="text-[10px] font-bold text-token-text pointer-events-none">
                     {dateStr.slice(8)}
                   </span>
                 )}
@@ -106,14 +106,14 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({
       </div>
 
       {/* Legend */}
-      <div className="mt-3 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
+      <div className="mt-3 flex items-center justify-between text-[11px] text-token-muted pt-2 border-t border-token-raised">
         <span>0%</span>
         <div className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded-xs bg-slate-200 dark:bg-slate-800" />
-          <span className="h-3 w-3 rounded-xs bg-emerald-300 dark:bg-emerald-950/80" />
-          <span className="h-3 w-3 rounded-xs bg-emerald-500 dark:bg-emerald-700" />
-          <span className="h-3 w-3 rounded-xs bg-emerald-600 dark:bg-emerald-500" />
-          <span className="h-3 w-3 rounded-xs bg-cyan-500" title="Streak Freeze" />
+          <span className="h-3 w-3 rounded-xs bg-token-raised" />
+          <span className="h-3 w-3 rounded-xs bg-token-cat-1 opacity-50" />
+          <span className="h-3 w-3 rounded-xs bg-token-cat-1 opacity-80" />
+          <span className="h-3 w-3 rounded-xs bg-token-accent" />
+          <span className="h-3 w-3 rounded-xs bg-token-cat-2" title="Streak Freeze" />
         </div>
         <span>100% (70%+ = {language === 'uz' ? 'Bajarildi' : 'Done'})</span>
       </div>

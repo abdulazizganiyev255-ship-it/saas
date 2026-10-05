@@ -18,10 +18,10 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
 
   const isComplete = clampedScore >= 70;
   const strokeColor = isComplete
-    ? '#10b981' // emerald-500
+    ? 'var(--accent)'
     : clampedScore >= 40
-    ? '#6366f1' // indigo-500
-    : '#f59e0b'; // amber-500
+    ? 'var(--cat-4)'
+    : 'var(--warning)';
 
   return (
     <div className="relative inline-flex items-center justify-center shrink-0">
@@ -31,10 +31,9 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="currentColor"
+          stroke="var(--raised)"
           strokeWidth={strokeWidth}
           fill="transparent"
-          className="text-slate-200 dark:text-slate-800"
         />
         {/* Progress stroke */}
         <circle
@@ -52,7 +51,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
       </svg>
       {/* Center text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-xs font-black text-slate-900 dark:text-white leading-none">
+        <span className="text-xs font-black text-token-text leading-none">
           {clampedScore}%
         </span>
       </div>

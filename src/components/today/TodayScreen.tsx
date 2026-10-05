@@ -286,30 +286,30 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
   const isToday = selectedDate === todayStr;
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-5 sm:py-7 space-y-5">
+    <div className="mx-auto max-w-2xl px-4 py-5 sm:py-7 space-y-5 bg-token-bg text-token-text">
       {/* 1. Date Navigation & Status Bar */}
-      <div className="flex items-center justify-between rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
+      <div className="flex items-center justify-between rounded-2xl border border-token-raised bg-token-card p-3.5 shadow-sm transition-colors">
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setSelectedDate((prev) => addDays(prev, -1))}
-            className="tap-target flex h-10 w-10 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white transition"
+            className="tap-target flex h-10 w-10 items-center justify-center rounded-xl text-token-muted hover:bg-token-raised transition"
             aria-label={t('prevDay', language)}
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
 
           <div className="flex flex-col">
-            <span className="text-sm font-bold text-slate-900 dark:text-white capitalize">
+            <span className="text-sm font-bold text-token-text capitalize">
               {formatDateDisplay(selectedDate, language)}
             </span>
-            <span className="text-[11px] text-slate-400">
+            <span className="text-[11px] text-token-muted">
               {isToday ? t('todayDate', language) : selectedDate}
             </span>
           </div>
 
           <button
             onClick={() => setSelectedDate((prev) => addDays(prev, 1))}
-            className="tap-target flex h-10 w-10 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white transition"
+            className="tap-target flex h-10 w-10 items-center justify-center rounded-xl text-token-muted hover:bg-token-raised transition"
             aria-label={t('nextDay', language)}
           >
             <ChevronRight className="h-5 w-5" />
@@ -320,9 +320,9 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           {!isToday && (
             <button
               onClick={() => setSelectedDate(todayStr)}
-              className="tap-target flex items-center gap-1 rounded-xl bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition"
+              className="tap-target flex items-center gap-1 rounded-xl bg-token-raised px-3 py-1.5 text-xs font-semibold text-token-text transition"
             >
-              <RotateCcw className="h-3.5 w-3.5 text-indigo-500" />
+              <RotateCcw className="h-3.5 w-3.5 text-token-cat-4" />
               <span>{t('jumpToToday', language)}</span>
             </button>
           )}
@@ -331,8 +331,8 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
             onClick={() => setShowStats((prev) => !prev)}
             className={`tap-target flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold border transition ${
               showStats
-                ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                : 'border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-800'
+                ? 'bg-token-accent text-token-on-accent border-token-accent shadow-sm'
+                : 'border-token-raised text-token-muted bg-token-card'
             }`}
           >
             <BarChart3 className="h-3.5 w-3.5" />
@@ -357,7 +357,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
 
       {/* Freeze applied toast notification */}
       {freezeAppliedToast && (
-        <div className="flex items-center gap-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 p-3 text-xs font-bold text-cyan-600 dark:text-cyan-400 animate-fade-in">
+        <div className="flex items-center gap-2 rounded-xl bg-token-raised border border-token-cat-2 p-3 text-xs font-bold text-token-cat-2 animate-fade-in">
           <Snowflake className="h-4 w-4" />
           <span>{t('freezeAppliedSuccess', language)}</span>
         </div>
@@ -365,16 +365,16 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
 
       {/* Sunday Weekly Review Highlighted Card */}
       {selectedWeekday === 7 && (
-        <div className="rounded-3xl border border-amber-500/40 bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-amber-500/5 p-4 sm:p-5 dark:border-amber-500/30 flex items-center justify-between gap-3 shadow-sm">
+        <div className="rounded-3xl border border-token-warning bg-token-raised p-4 sm:p-5 flex items-center justify-between gap-3 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-md shadow-amber-500/30 shrink-0">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-token-accent text-token-on-accent shadow-md shrink-0">
               <CalendarCheck className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+              <p className="text-xs font-bold text-token-warning uppercase tracking-wider">
                 {language === 'uz' ? 'Yakshanba Tahlili' : 'Sunday Retrospective'}
               </p>
-              <h3 className="text-sm font-extrabold text-slate-900 dark:text-white">
+              <h3 className="text-sm font-extrabold text-token-text">
                 {language === 'uz'
                   ? 'Haftani sarhisob qiling va rejalarni belgilang!'
                   : 'Time to complete your weekly reflection & review!'}
@@ -384,7 +384,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           {onNavigate && (
             <button
               onClick={() => onNavigate('review')}
-              className="tap-target shrink-0 inline-flex items-center gap-1 rounded-xl bg-amber-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-amber-700 active:scale-95 transition"
+              className="tap-target shrink-0 inline-flex items-center gap-1 rounded-xl bg-token-accent text-token-on-accent px-3.5 py-2 text-xs font-bold shadow-sm transition"
             >
               <span>{language === 'uz' ? 'Tahlil' : 'Review'}</span>
               <ArrowRight className="h-3.5 w-3.5" />
@@ -394,23 +394,23 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
       )}
 
       {/* 2. Top Header Card: Streak + Score Ring + Status */}
-      <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
+      <div className="relative overflow-hidden rounded-3xl border border-token-raised bg-token-card p-5 sm:p-6 shadow-sm transition-colors">
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 dark:bg-amber-950/40">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-token-raised text-token-warning">
                 <Flame className="h-6 w-6 animate-pulse" />
               </div>
               <div>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl font-black text-slate-900 dark:text-white leading-none">
+                  <span className="text-2xl font-black text-token-text leading-none">
                     {streak}
                   </span>
-                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  <span className="text-xs font-bold text-token-muted uppercase tracking-wider">
                     {t('streakLabel', language)}
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-token-muted">
                   {isComplete
                     ? t('dayCompleteBadge', language)
                     : `${completedCount}/${activeTotal} ${language === 'uz' ? 'bajarildi' : 'completed'}`}
@@ -423,13 +423,13 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
               <div
                 className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-semibold border ${
                   currentDay.isFreezeUsed
-                    ? 'bg-cyan-50 border-cyan-200 text-cyan-700 dark:bg-cyan-950/40 dark:border-cyan-800 dark:text-cyan-300'
+                    ? 'bg-token-raised border-token-cat-2 text-token-cat-2'
                     : freezeAvailableForWeek
-                    ? 'bg-slate-50 border-slate-200 text-slate-600 dark:bg-slate-800/60 dark:border-slate-700 dark:text-slate-300'
-                    : 'bg-slate-100 border-slate-200 text-slate-400 dark:bg-slate-800/40 dark:border-slate-800 dark:text-slate-500'
+                    ? 'bg-token-raised border-token-raised text-token-text'
+                    : 'bg-token-raised border-token-raised text-token-muted'
                 }`}
               >
-                <Snowflake className="h-3 w-3 text-cyan-500" />
+                <Snowflake className="h-3 w-3 text-token-cat-2" />
                 <span>
                   {currentDay.isFreezeUsed
                     ? t('freezeUsedBadge', language)
@@ -440,7 +440,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
               {!isComplete && !currentDay.isFreezeUsed && freezeAvailableForWeek && (
                 <button
                   onClick={handleApplyFreeze}
-                  className="tap-target text-[11px] font-bold text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 underline underline-offset-2"
+                  className="tap-target text-[11px] font-bold text-token-cat-2 underline underline-offset-2"
                 >
                   {t('useFreezeBtn', language)}
                 </button>
@@ -450,7 +450,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
 
           <div className="flex flex-col items-center gap-1">
             <ScoreRing score={score} size={76} strokeWidth={7} />
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            <span className="text-[10px] font-bold text-token-muted uppercase tracking-wider">
               {t('dayScoreLabel', language)}
             </span>
           </div>
@@ -458,13 +458,13 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
       </div>
 
       {/* 3. Top 3 Priorities */}
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
+      <div className="rounded-2xl border border-token-raised bg-token-card p-5 shadow-sm transition-colors">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-            <Sparkles className="h-4 w-4 text-indigo-500" />
+          <h2 className="text-sm font-bold uppercase tracking-wider text-token-muted flex items-center gap-1.5">
+            <Sparkles className="h-4 w-4 text-token-cat-4" />
             <span>{t('top3Heading', language)}</span>
           </h2>
-          <span className="text-[10px] text-slate-400 font-medium">1-3</span>
+          <span className="text-[10px] text-token-muted font-medium">1-3</span>
         </div>
 
         <div className="space-y-2.5">
@@ -478,7 +478,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
 
             return (
               <div key={idx} className="relative flex items-center">
-                <span className="absolute left-3.5 text-xs font-bold text-indigo-500">
+                <span className="absolute left-3.5 text-xs font-bold text-token-cat-4">
                   {idx + 1}.
                 </span>
                 <input
@@ -486,7 +486,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
                   value={val}
                   onChange={(e) => handleTop3Change(idx, e.target.value)}
                   placeholder={placeholders[idx]}
-                  className="tap-target w-full rounded-xl border border-slate-200 bg-slate-50/60 pl-8 pr-3 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-800 dark:bg-slate-950/60 dark:text-white dark:focus:bg-slate-950 transition"
+                  className="tap-target w-full rounded-xl border border-token-raised bg-token-raised pl-8 pr-3 py-2.5 text-sm font-medium text-token-text placeholder:text-token-muted focus:border-token-accent focus:outline-none transition"
                 />
               </div>
             );
@@ -495,18 +495,18 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
       </div>
 
       {/* 4. One-Tap Habit Checklist (Optimistic UI, Instant Toggle) */}
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
+      <div className="rounded-2xl border border-token-raised bg-token-card p-5 shadow-sm transition-colors">
         <div className="flex items-center justify-between mb-3.5">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-token-muted">
             {t('habitsHeading', language)}
           </h2>
-          <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
+          <span className="text-xs font-bold text-token-accent">
             {completedCount} / {activeTotal} ({score}%)
           </span>
         </div>
 
         {activeHabits.length === 0 ? (
-          <p className="text-xs text-slate-400 italic py-2">
+          <p className="text-xs text-token-muted italic py-2">
             {t('noHabitsActive', language)}
           </p>
         ) : (
@@ -520,17 +520,17 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
                   onClick={() => handleToggleHabit(habit.id)}
                   className={`tap-target flex items-center justify-between rounded-xl p-3 text-left transition-all ${
                     isChecked
-                      ? 'bg-emerald-500/10 border border-emerald-500/40 text-emerald-950 dark:text-emerald-200 shadow-2xs'
-                      : 'bg-slate-50/70 border border-slate-200/70 text-slate-700 hover:bg-slate-100 dark:bg-slate-950/60 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800'
+                      ? 'bg-token-raised border border-token-accent text-token-accent shadow-2xs'
+                      : 'bg-token-raised border border-token-raised text-token-text hover:opacity-90'
                   }`}
                 >
-                  <span className={`text-sm font-semibold truncate pr-2 ${isChecked ? 'line-through text-emerald-700 dark:text-emerald-400' : ''}`}>
+                  <span className={`text-sm font-semibold truncate pr-2 ${isChecked ? 'line-through text-token-accent' : ''}`}>
                     {habit.label}
                   </span>
                   {isChecked ? (
-                    <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <CheckCircle2 className="h-5 w-5 text-token-accent shrink-0" />
                   ) : (
-                    <Circle className="h-5 w-5 text-slate-300 dark:text-slate-700 shrink-0" />
+                    <Circle className="h-5 w-5 text-token-faint shrink-0" />
                   )}
                 </button>
               );
@@ -540,18 +540,18 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
       </div>
 
       {/* 5. INTEGRATED LINK: Today's Classes & Konspekt Tracker */}
-      <div className="rounded-2xl border border-blue-200/80 bg-blue-50/40 p-4 sm:p-5 dark:border-blue-900/50 dark:bg-blue-950/20 transition-colors space-y-3">
+      <div className="rounded-2xl border border-token-raised bg-token-raised p-4 sm:p-5 transition-colors space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <GraduationCap className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-blue-300">
+            <GraduationCap className="h-4 w-4 text-token-cat-2" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-token-text">
               {t('todayClassesShortcut', language)}
             </h3>
           </div>
           {onNavigate && (
             <button
               onClick={() => onNavigate('study')}
-              className="tap-target text-xs font-bold text-blue-600 hover:underline flex items-center gap-0.5"
+              className="tap-target text-xs font-bold text-token-cat-2 hover:underline flex items-center gap-0.5"
             >
               <span>Study</span>
               <ArrowRight className="h-3 w-3" />
@@ -560,7 +560,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
         </div>
 
         {todayClasses.length === 0 ? (
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-token-muted">
             {t('noClassesScheduledToday', language)}
           </p>
         ) : (
@@ -572,13 +572,13 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
               return (
                 <div
                   key={cls.id}
-                  className="flex items-center justify-between rounded-xl bg-white p-3 border border-slate-200/70 dark:bg-slate-900 dark:border-slate-800 shadow-2xs"
+                  className="flex items-center justify-between rounded-xl bg-token-card p-3 border border-token-raised shadow-2xs"
                 >
                   <div className="min-w-0 pr-2">
-                    <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                    <p className="text-xs font-bold text-token-text truncate">
                       {course?.name || cls.courseId}
                     </p>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-token-muted">
                       {cls.startTime} · {cls.room || cls.type}
                     </p>
                   </div>
@@ -587,11 +587,11 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
                     onClick={() => handleToggleKonspekt(cls.courseId)}
                     className={`tap-target shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
                       done
-                        ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
-                        : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                        ? 'bg-token-raised text-token-accent'
+                        : 'bg-token-raised text-token-muted'
                     }`}
                   >
-                    {done ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> : <Circle className="h-3.5 w-3.5 text-slate-400" />}
+                    {done ? <CheckCircle2 className="h-3.5 w-3.5 text-token-accent" /> : <Circle className="h-3.5 w-3.5 text-token-muted" />}
                     <span>{done ? t('konspektDoneBtn', language) : t('konspektPending', language)}</span>
                   </button>
                 </div>
@@ -604,16 +604,16 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
       {/* 6. INTEGRATED LINK: Today's Workout & Language Shortcuts */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {/* Workout shortcut */}
-        <div className="rounded-2xl border border-orange-200/80 bg-orange-50/40 p-4 dark:border-orange-900/50 dark:bg-orange-950/20 flex items-center justify-between">
+        <div className="rounded-2xl border border-token-raised bg-token-raised p-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-600 text-white shrink-0">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-token-accent text-token-on-accent shrink-0">
               <Dumbbell className="h-4 w-4" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                {t('todayWorkoutShortcut', language)}: <span className="text-orange-600 dark:text-orange-400">{todayPlannedSplit}</span>
+              <p className="text-xs font-bold text-token-text truncate">
+                {t('todayWorkoutShortcut', language)}: <span className="text-token-accent">{todayPlannedSplit}</span>
               </p>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-token-muted">
                 {selectedWeekday === 7 ? 'Recovery walk & mobility' : 'Gym session'}
               </p>
             </div>
@@ -621,7 +621,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           {onNavigate && (
             <button
               onClick={() => onNavigate('gym')}
-              className="tap-target shrink-0 text-xs font-bold text-orange-600 hover:underline flex items-center gap-0.5"
+              className="tap-target shrink-0 text-xs font-bold text-token-accent hover:underline flex items-center gap-0.5"
             >
               <span>Gym</span>
               <ArrowRight className="h-3 w-3" />
@@ -630,16 +630,16 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
         </div>
 
         {/* Language practice shortcut */}
-        <div className="rounded-2xl border border-cyan-200/80 bg-cyan-50/40 p-4 dark:border-cyan-900/50 dark:bg-cyan-950/20 flex items-center justify-between">
+        <div className="rounded-2xl border border-token-raised bg-token-raised p-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-600 text-white shrink-0">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-token-cat-2 text-token-on-accent shrink-0">
               <Languages className="h-4 w-4" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+              <p className="text-xs font-bold text-token-text truncate">
                 {t('todayLanguageProgress', language)}
               </p>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-token-muted">
                 Norma: {userProfile?.settings?.languageTargetMinutes ?? 45}m
               </p>
             </div>
@@ -647,7 +647,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           {onNavigate && (
             <button
               onClick={() => onNavigate('language')}
-              className="tap-target shrink-0 text-xs font-bold text-cyan-600 hover:underline flex items-center gap-0.5"
+              className="tap-target shrink-0 text-xs font-bold text-token-cat-2 hover:underline flex items-center gap-0.5"
             >
               <span>Lang</span>
               <ArrowRight className="h-3 w-3" />
@@ -656,16 +656,16 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
         </div>
 
         {/* Goals shortcut */}
-        <div className="rounded-2xl border border-purple-200/80 bg-purple-50/40 p-4 dark:border-purple-900/50 dark:bg-purple-950/20 flex items-center justify-between sm:col-span-2">
+        <div className="rounded-2xl border border-token-raised bg-token-raised p-4 flex items-center justify-between sm:col-span-2">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-600 text-white shrink-0">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-token-cat-4 text-token-on-accent shrink-0">
               <Target className="h-4 w-4" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+              <p className="text-xs font-bold text-token-text truncate">
                 {t('goalsTitle', language)}
               </p>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-token-muted">
                 {language === 'uz' ? 'Yillik & choraklik shaxsiy maqsadlar' : 'Quarterly & annual target progress'}
               </p>
             </div>
@@ -673,7 +673,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           {onNavigate && (
             <button
               onClick={() => onNavigate('goals')}
-              className="tap-target shrink-0 text-xs font-bold text-purple-600 hover:underline flex items-center gap-0.5"
+              className="tap-target shrink-0 text-xs font-bold text-token-cat-4 hover:underline flex items-center gap-0.5"
             >
               <span>Goals</span>
               <ArrowRight className="h-3 w-3" />
@@ -683,18 +683,18 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
       </div>
 
       {/* 7. Health & Energy Metric Inputs */}
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors space-y-4">
+      <div className="rounded-2xl border border-token-raised bg-token-card p-5 shadow-sm transition-colors space-y-4">
         {/* Sleep Hours Stepper / Input */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-token-raised text-token-cat-4">
               <MoonStar className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-900 dark:text-white">
+              <p className="text-sm font-bold text-token-text">
                 {t('sleepHoursLabel', language)}
               </p>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-token-muted">
                 {userProfile?.settings?.sleepTargetHours ?? 7} {t('hoursUnit', language)} {language === 'uz' ? 'norma' : 'target'}
               </p>
             </div>
@@ -708,8 +708,8 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
                 onClick={() => handleMetricUpdate('sleepHours', val)}
                 className={`tap-target flex h-10 w-10 items-center justify-center rounded-xl text-xs font-bold transition-all ${
                   currentDay.sleepHours === val
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
+                    ? 'bg-token-accent text-token-on-accent shadow-md'
+                    : 'bg-token-raised text-token-muted hover:text-token-text'
                 }`}
               >
                 {val}h
@@ -718,19 +718,19 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        <hr className="border-slate-100 dark:border-slate-800" />
+        <hr className="border-token-raised" />
 
         {/* Energy Level (1-5 Chips) */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-500">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-token-raised text-token-warning">
               <Zap className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-900 dark:text-white">
+              <p className="text-sm font-bold text-token-text">
                 {t('energyLevelLabel', language)}
               </p>
-              <p className="text-[11px] text-slate-400">1 (pastroq) - 5 (yuqori)</p>
+              <p className="text-[11px] text-token-muted">1 (pastroq) - 5 (yuqori)</p>
             </div>
           </div>
 
@@ -742,8 +742,8 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
                 onClick={() => handleMetricUpdate('energy', lvl)}
                 className={`tap-target flex h-10 w-10 items-center justify-center rounded-xl text-xs font-bold transition-all ${
                   currentDay.energy === lvl
-                    ? 'bg-amber-500 text-white shadow-md shadow-amber-500/30'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
+                    ? 'bg-token-warning text-token-on-accent shadow-md'
+                    : 'bg-token-raised text-token-muted hover:text-token-text'
                 }`}
               >
                 {lvl}
@@ -752,19 +752,19 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        <hr className="border-slate-100 dark:border-slate-800" />
+        <hr className="border-token-raised" />
 
         {/* Meals Count (0-3 Chips) */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-token-raised text-token-accent">
               <UtensilsCrossed className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-900 dark:text-white">
+              <p className="text-sm font-bold text-token-text">
                 {t('mealsCountLabel', language)}
               </p>
-              <p className="text-[11px] text-slate-400">0 - 3 taom</p>
+              <p className="text-[11px] text-token-muted">0 - 3 taom</p>
             </div>
           </div>
 
@@ -776,8 +776,8 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
                 onClick={() => handleMetricUpdate('meals', count)}
                 className={`tap-target flex h-10 w-10 items-center justify-center rounded-xl text-xs font-bold transition-all ${
                   currentDay.meals === count
-                    ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
+                    ? 'bg-token-accent text-token-on-accent shadow-md'
+                    : 'bg-token-raised text-token-muted hover:text-token-text'
                 }`}
               >
                 {count}
@@ -788,21 +788,21 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
       </div>
 
       {/* 8. Evening Review with Autosave (Debounced 800ms) */}
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
+      <div className="rounded-2xl border border-token-raised bg-token-card p-5 shadow-sm transition-colors">
         <div className="flex items-center justify-between mb-2.5">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-token-muted">
             {t('eveningReviewHeading', language)}
           </h2>
 
-          <div className="flex items-center gap-1 text-[11px] font-medium text-slate-400">
+          <div className="flex items-center gap-1 text-[11px] font-medium text-token-muted">
             {saveStatus === 'saving' ? (
               <>
-                <Clock className="h-3 w-3 animate-spin text-indigo-500" />
+                <Clock className="h-3 w-3 animate-spin text-token-accent" />
                 <span>{t('savingAuto', language)}</span>
               </>
             ) : (
               <>
-                <Check className="h-3 w-3 text-emerald-500" />
+                <Check className="h-3 w-3 text-token-accent" />
                 <span>{t('savedAuto', language)}</span>
               </>
             )}
@@ -814,7 +814,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           value={currentDay.eveningReview || ''}
           onChange={(e) => handleReviewChange(e.target.value)}
           placeholder={t('eveningReviewPlaceholder', language)}
-          className="w-full rounded-xl border border-slate-200 bg-slate-50/60 p-3.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-slate-800 dark:bg-slate-950/60 dark:text-white dark:focus:bg-slate-950 transition resize-none"
+          className="w-full rounded-xl border border-token-raised bg-token-raised p-3.5 text-sm font-medium text-token-text placeholder:text-token-muted focus:border-token-accent focus:outline-none transition resize-none"
         />
       </div>
     </div>
