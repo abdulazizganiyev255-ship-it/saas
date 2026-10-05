@@ -110,11 +110,11 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4">
       {/* Bottom sheet on mobile, rounded modal on desktop */}
-      <div className="w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900 transition-all max-h-[90vh] overflow-y-auto">
+      <div className="w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl border border-token-raised bg-token-card p-5 sm:p-6 shadow-2xl transition-all max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex items-center justify-between pb-3 border-b border-token-raised">
           {/* Type Selector Tabs */}
-          <div className="flex items-center rounded-xl border border-slate-200 bg-slate-100/80 p-0.5 dark:border-slate-800 dark:bg-slate-950">
+          <div className="flex items-center rounded-xl border border-token-raised bg-token-raised p-0.5">
             <button
               type="button"
               onClick={() => {
@@ -123,8 +123,8 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
               }}
               className={`tap-target px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 type === 'expense'
-                  ? 'bg-rose-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                  ? 'bg-token-danger text-token-on-accent shadow-sm'
+                  : 'text-token-muted hover:text-token-text'
               }`}
             >
               {t('typeExpense', language)}
@@ -137,8 +137,8 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
               }}
               className={`tap-target px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 type === 'income'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                  ? 'bg-token-accent text-token-on-accent shadow-sm'
+                  : 'text-token-muted hover:text-token-text'
               }`}
             >
               {t('typeIncome', language)}
@@ -148,8 +148,8 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
               onClick={() => setType('savings')}
               className={`tap-target px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 type === 'savings'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                  ? 'bg-token-cat-4 text-white shadow-sm'
+                  : 'text-token-muted hover:text-token-text'
               }`}
             >
               {t('typeSavings', language)}
@@ -158,7 +158,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
 
           <button
             onClick={onClose}
-            className="tap-target flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="tap-target flex h-9 w-9 items-center justify-center rounded-xl text-token-muted hover:bg-token-raised"
           >
             <X className="h-5 w-5" />
           </button>
@@ -168,11 +168,11 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
           {/* Amount Field Comes FIRST, Focused, Numeric Keypad */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label htmlFor="amount" className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <label htmlFor="amount" className="text-xs font-bold uppercase tracking-wider text-token-muted">
                 {t('amountLabel', language)}
               </label>
               {parsedAmount !== null && parsedAmount > 0 && (
-                <span className="text-xs font-black text-indigo-600 dark:text-indigo-400">
+                <span className="text-xs font-black text-token-cat-4-text">
                   = {formatUZS(parsedAmount)} {t('currencyUzs', language)}
                 </span>
               )}
@@ -188,14 +188,14 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                 value={rawAmount}
                 onChange={(e) => setRawAmount(e.target.value)}
                 placeholder={t('amountPlaceholder', language)}
-                className="tap-target w-full rounded-2xl border-2 border-slate-300 bg-slate-50/50 px-4 py-3.5 text-2xl font-black text-slate-900 placeholder:text-slate-300 focus:border-indigo-500 focus:bg-white focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-400 transition"
+                className="tap-target w-full rounded-2xl border-2 border-token-raised bg-token-raised px-4 py-3.5 text-2xl font-black text-token-text placeholder:text-token-muted focus:border-token-accent focus:outline-none transition"
               />
-              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 uppercase">
+              <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-token-muted uppercase">
                 {t('currencyUzs', language)}
               </span>
             </div>
 
-            <p className="mt-1.5 text-[11px] text-slate-400 flex items-center gap-1">
+            <p className="mt-1.5 text-[11px] text-token-muted flex items-center gap-1">
               <HelpCircle className="h-3 w-3" />
               <span>{t('shortcutHint', language)}</span>
             </p>
@@ -203,7 +203,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
 
           {/* Category Chips (Remembers Last Used) */}
           <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-token-muted block mb-2">
               {t('categoryLabel', language)}
             </label>
             <div className="flex flex-wrap gap-2">
@@ -216,8 +216,8 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                     onClick={() => setCategory(cat)}
                     className={`tap-target px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                       isSelected
-                        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25 scale-102'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                        ? 'bg-token-accent text-token-on-accent shadow-md'
+                        : 'bg-token-raised text-token-text hover:bg-token-card'
                     }`}
                   >
                     {cat}
@@ -229,7 +229,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
 
           {/* Payment Method Chips */}
           <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-token-muted block mb-2">
               {t('paymentMethodLabel', language)}
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -245,8 +245,8 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                   onClick={() => setPaymentMethod(m.id)}
                   className={`tap-target py-2 px-2.5 rounded-xl text-xs font-bold transition-all text-center ${
                     paymentMethod === m.id
-                      ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 shadow-sm'
-                      : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                      ? 'bg-token-accent text-token-on-accent shadow-sm'
+                      : 'bg-token-raised text-token-muted'
                   }`}
                 >
                   {m.label}
@@ -258,7 +258,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
           {/* Date & Note Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label htmlFor="txDate" className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1">
+              <label htmlFor="txDate" className="text-xs font-bold uppercase tracking-wider text-token-muted block mb-1">
                 {t('dateLabel', language)}
               </label>
               <input
@@ -266,12 +266,12 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="tap-target w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                className="tap-target w-full rounded-xl border border-token-raised bg-token-raised px-3.5 py-2 text-xs font-semibold text-token-text focus:ring-token-accent"
               />
             </div>
 
             <div>
-              <label htmlFor="txNote" className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1">
+              <label htmlFor="txNote" className="text-xs font-bold uppercase tracking-wider text-token-muted block mb-1">
                 {t('noteLabel', language)}
               </label>
               <input
@@ -280,7 +280,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 placeholder={t('notePlaceholder', language)}
-                className="tap-target w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-medium text-slate-900 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                className="tap-target w-full rounded-xl border border-token-raised bg-token-raised px-3.5 py-2 text-xs font-medium text-token-text placeholder:text-token-muted focus:ring-token-accent"
               />
             </div>
           </div>
@@ -290,7 +290,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
             <button
               type="submit"
               disabled={saving || !parsedAmount || parsedAmount <= 0}
-              className="tap-target flex w-full items-center justify-center gap-2 rounded-2xl bg-indigo-600 py-3.5 text-base font-bold text-white shadow-xl shadow-indigo-600/30 hover:bg-indigo-700 active:scale-98 disabled:opacity-50 transition cursor-pointer"
+              className="tap-target flex w-full items-center justify-center gap-2 rounded-2xl bg-token-accent text-token-on-accent py-3.5 text-base font-bold shadow-lg active:scale-98 disabled:opacity-50 transition cursor-pointer"
             >
               <Check className="h-5 w-5" />
               <span>{saving ? t('saving', language) : t('saveTransaction', language)}</span>

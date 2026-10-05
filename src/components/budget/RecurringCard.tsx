@@ -32,7 +32,7 @@ export const RecurringCard: React.FC<RecurringCardProps> = ({
   return (
     <div className="rounded-2xl border border-token-raised bg-token-card p-4 sm:p-5 transition-colors">
       <div className="flex items-center gap-2 mb-3">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-token-cat-4 text-white">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-token-cat-4 text-token-on-accent">
           <Repeat className="h-4 w-4" />
         </div>
         <h3 className="text-xs font-bold uppercase tracking-wider text-token-cat-4-text">
