@@ -243,9 +243,18 @@ export const WeeklyReviewContent: React.FC<WeeklyReviewProps> = ({ onNavigate })
               })}
             </ul>
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-token-muted">
-              <span>{t('wrLegendDone', language)}</span>
-              <span>{t('wrLegendGrace', language)}</span>
-              <span>{t('wrLegendToday', language)}</span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-3 w-3 rounded-full bg-token-accent" aria-hidden="true" />
+                {t('wrLegendDone', language)}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-3 w-3 rounded-full border-2 border-dashed border-token-accent" aria-hidden="true" />
+                {t('wrLegendGrace', language)}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-3 w-3 rounded-full ring-2 ring-token-accent" aria-hidden="true" />
+                {t('wrLegendToday', language)}
+              </span>
             </div>
           </section>
 

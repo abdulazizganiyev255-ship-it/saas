@@ -1,4 +1,5 @@
 import { DEFAULT_TIMEZONE } from '../config/constants';
+import { MONTHS_SHORT, WEEKDAYS_SHORT } from '../i18n';
 
 /**
  * Format Uzbek So'm (UZS) with space separators, no decimals.
@@ -72,14 +73,18 @@ export function formatDateDisplay(dateStr: string, lang: 'uz' | 'en'): string {
   try {
     const [y, m, d] = dateStr.split('-').map(Number);
     const date = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
-    const locale = lang === 'uz' ? 'uz-UZ' : 'en-US';
+    if (lang === 'uz') {
+      // Browsers ship no Uzbek date data, so Intl prints "M10 5, Mon". Use our own tables.
+      const weekdayIndex = (date.getUTCDay() + 6) % 7;
+      return `${d}-${MONTHS_SHORT.uz[m - 1]}, ${WEEKDAYS_SHORT.uz[weekdayIndex]}`;
+    }
     const options: Intl.DateTimeFormatOptions = {
       weekday: 'short',
       month: 'short',
       day: 'numeric',
       timeZone: 'UTC',
     };
-    return new Intl.DateTimeFormat(locale, options).format(date);
+    return new Intl.DateTimeFormat('en-US', options).format(date);
   } catch {
     return dateStr;
   }

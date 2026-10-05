@@ -283,7 +283,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
             </span>
           </div>
           <p className="text-[10px] text-token-warning font-semibold truncate">
-            {currentStreak > 0 ? (language === 'uz' ? 'Intizom yuqori!' : 'Streak on fire!') : (language === 'uz' ? 'Bugun boshlang' : 'Start today')} →
+            {currentStreak > 0 ? (language === 'uz' ? 'Intizom yuqori!' : 'Consistency is strong!') : (language === 'uz' ? 'Bugun boshlang' : 'Start today')} →
           </p>
         </div>
 
