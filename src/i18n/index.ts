@@ -859,6 +859,11 @@ export const MONTHS_SHORT: Record<Language, string[]> = {
   en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 };
 
+export const MONTHS_FULL_UZ = [
+  'Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun',
+  'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr',
+];
+
 /** Replace {name} placeholders in a translated string. */
 export function tf(key: TranslationKey, lang: Language, vars: Record<string, string | number>): string {
   return Object.entries(vars).reduce(

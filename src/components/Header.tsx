@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { t } from '../i18n';
 import { APP_NAME } from '../config/constants';
+import { formatDateDisplay, getTodayDateString } from '../utils/format';
 import type { TabType } from '../types';
 import {
   Moon,
@@ -40,21 +41,7 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onNavigate }) => {
   }, []);
 
   // Format today's date in Tashkent timezone
-  const getFormattedDate = () => {
-    try {
-      const now = new Date();
-      const locale = language === 'uz' ? 'uz-UZ' : 'en-US';
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: 'Asia/Tashkent',
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-      };
-      return new Intl.DateTimeFormat(locale, options).format(now);
-    } catch {
-      return new Date().toLocaleDateString();
-    }
-  };
+  const getFormattedDate = () => formatDateDisplay(getTodayDateString('Asia/Tashkent'), language);
 
   const getGreeting = () => {
     const hour = new Date().getHours();

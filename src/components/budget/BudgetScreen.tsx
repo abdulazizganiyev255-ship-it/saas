@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { t } from '../../i18n';
+import { t, MONTHS_FULL_UZ } from '../../i18n';
 import type { Transaction, RecurringTemplate, TabType } from '../../types';
 import {
   getMonthTransactions,
@@ -141,8 +141,8 @@ export const BudgetScreen: React.FC<BudgetScreenProps> = ({ onNavigate }) => {
   // Month display title (e.g. "Oktabr 2026" / "October 2026")
   const monthTitle = useMemo(() => {
     const d = new Date(year, monthIndex, 1);
-    const locale = language === 'uz' ? 'uz-UZ' : 'en-US';
-    return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(d);
+    if (language === 'uz') return `${MONTHS_FULL_UZ[d.getMonth()]} ${d.getFullYear()}`;
+    return new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(d);
   }, [year, monthIndex, language]);
 
   // Calculate totals
