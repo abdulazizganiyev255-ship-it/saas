@@ -148,7 +148,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
               onClick={() => setType('savings')}
               className={`tap-target px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 type === 'savings'
-                  ? 'bg-token-cat-4 text-white shadow-sm'
+                  ? 'bg-token-cat-4 text-token-on-accent shadow-sm'
                   : 'text-token-muted hover:text-token-text'
               }`}
             >

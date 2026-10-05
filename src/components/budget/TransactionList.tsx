@@ -41,11 +41,11 @@ export const TransactionList: React.FC<TransactionListProps> = ({
   const getMethodIcon = (method: string) => {
     switch (method) {
       case 'card':
-        return <CreditCard className="h-3.5 w-3.5 text-token-cat-2" />;
+        return <CreditCard className="h-3.5 w-3.5 text-token-cat-2-text" />;
       case 'cash':
         return <Banknote className="h-3.5 w-3.5 text-token-accent" />;
       case 'click_payme':
-        return <Smartphone className="h-3.5 w-3.5 text-token-cat-2" />;
+        return <Smartphone className="h-3.5 w-3.5 text-token-cat-2-text" />;
       default:
         return <HelpCircle className="h-3.5 w-3.5 text-token-muted" />;
     }
