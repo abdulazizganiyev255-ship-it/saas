@@ -1,9 +1,12 @@
+import { HIDDEN_TABS } from '../config/constants';
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { t } from '../i18n';
 import type { TabType } from '../types';
 import {
   CalendarDays,
+  CalendarCheck,
+  LayoutDashboard,
   Wallet,
   Dumbbell,
   GraduationCap,
@@ -20,12 +23,14 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onNavigate }) 
   const { language } = useAuth();
 
   const navItems = [
+    { id: 'home' as TabType, label: t('navHome', language), icon: LayoutDashboard },
     { id: 'today' as TabType, label: t('navToday', language), icon: CalendarDays },
     { id: 'budget' as TabType, label: t('navBudget', language), icon: Wallet },
     { id: 'gym' as TabType, label: t('navGym', language), icon: Dumbbell },
     { id: 'study' as TabType, label: t('navStudy', language), icon: GraduationCap },
+    { id: 'review' as TabType, label: t('navReview', language), icon: CalendarCheck },
     { id: 'leaderboard' as TabType, label: t('navLeaderboard', language), icon: Trophy },
-  ];
+  ].filter((item) => !HIDDEN_TABS.includes(item.id));
 
   return (
     <nav

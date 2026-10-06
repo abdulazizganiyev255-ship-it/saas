@@ -1,3 +1,4 @@
+import { HIDDEN_TABS } from '../config/constants';
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { t } from '../i18n';
@@ -39,7 +40,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onNavigate }) => {
     { id: 'goals' as TabType, label: t('navGoals', language), icon: Target },
     { id: 'review' as TabType, label: t('navReview', language), icon: CalendarCheck },
     { id: 'leaderboard' as TabType, label: t('navLeaderboard', language), icon: Trophy },
-  ];
+  ].filter((item) => !HIDDEN_TABS.includes(item.id));
 
   return (
     <aside

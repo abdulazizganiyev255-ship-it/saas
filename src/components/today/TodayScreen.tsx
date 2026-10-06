@@ -1,3 +1,4 @@
+import { HIDDEN_TABS } from '../../config/constants';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { t } from '../../i18n';
@@ -540,7 +541,8 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
       </div>
 
       {/* 5. INTEGRATED LINK: Today's Classes & Konspekt Tracker */}
-      <div className="rounded-2xl border border-token-raised bg-token-raised p-4 sm:p-5 transition-colors space-y-3">
+      {!HIDDEN_TABS.includes('study') && (
+<div className="rounded-2xl border border-token-raised bg-token-raised p-4 sm:p-5 transition-colors space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <GraduationCap className="h-4 w-4 text-token-cat-2-text" />
@@ -600,11 +602,13 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
           </div>
         )}
       </div>
+)}
 
       {/* 6. INTEGRATED LINK: Today's Workout & Language Shortcuts */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {/* Workout shortcut */}
-        <div className="rounded-2xl border border-token-raised bg-token-raised p-4 flex items-center justify-between">
+        {!HIDDEN_TABS.includes('gym') && (
+<div className="rounded-2xl border border-token-raised bg-token-raised p-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-token-accent text-token-on-accent shrink-0">
               <Dumbbell className="h-4 w-4" />
@@ -628,9 +632,11 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
             </button>
           )}
         </div>
+)}
 
         {/* Language practice shortcut */}
-        <div className="rounded-2xl border border-token-raised bg-token-raised p-4 flex items-center justify-between">
+        {!HIDDEN_TABS.includes('language') && (
+<div className="rounded-2xl border border-token-raised bg-token-raised p-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-token-cat-2 text-token-on-accent shrink-0">
               <Languages className="h-4 w-4" />
@@ -654,6 +660,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
             </button>
           )}
         </div>
+)}
 
         {/* Goals shortcut */}
         <div className="rounded-2xl border border-token-raised bg-token-raised p-4 flex items-center justify-between sm:col-span-2">

@@ -1,3 +1,4 @@
+import { HIDDEN_TABS } from '../../config/constants';
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { t } from '../../i18n';
@@ -307,7 +308,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
         </div>
 
         {/* KPI 4: Workouts this week (of 6) */}
-        <div
+        {!HIDDEN_TABS.includes('gym') && (
+<div
           onClick={() => onNavigate('gym')}
           className="tap-target cursor-pointer rounded-2xl border border-token-raised bg-token-card p-4 shadow-2xs transition-all space-y-1"
         >
@@ -327,9 +329,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
             {language === 'uz' ? 'Zal jurnali' : 'Workout logs'} →
           </p>
         </div>
+)}
 
         {/* KPI 5: Language minutes today vs target */}
-        <div
+        {!HIDDEN_TABS.includes('language') && (
+<div
           onClick={() => onNavigate('language')}
           className="tap-target cursor-pointer rounded-2xl border border-token-raised bg-token-card p-4 shadow-2xs transition-all space-y-1"
         >
@@ -351,9 +355,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
               : (language === 'uz' ? `${languageTargetMin - languageMinutesToday}m qoldi` : `${languageTargetMin - languageMinutesToday}m left`)} →
           </p>
         </div>
+)}
 
         {/* KPI 6: Nearest task deadline */}
-        <div
+        {!HIDDEN_TABS.includes('study') && (
+<div
           onClick={() => onNavigate('study')}
           className="tap-target cursor-pointer rounded-2xl border border-token-raised bg-token-card p-4 shadow-2xs transition-all space-y-1"
         >
@@ -392,6 +398,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
             </div>
           )}
         </div>
+)}
       </div>
 
       {/* 4. THREE CHARTS */}
@@ -548,21 +555,25 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
           <span className="text-xs font-bold text-token-text">{t('navBudget', language)}</span>
         </button>
 
-        <button
+        {!HIDDEN_TABS.includes('gym') && (
+<button
           onClick={() => onNavigate('gym')}
           className="tap-target flex flex-col items-center justify-center p-4 rounded-2xl border border-token-raised bg-token-card text-center transition"
         >
           <Dumbbell className="h-6 w-6 text-token-cat-2-text mb-1" />
           <span className="text-xs font-bold text-token-text">{t('navGym', language)}</span>
         </button>
+)}
 
-        <button
+        {!HIDDEN_TABS.includes('study') && (
+<button
           onClick={() => onNavigate('study')}
           className="tap-target flex flex-col items-center justify-center p-4 rounded-2xl border border-token-raised bg-token-card text-center transition"
         >
           <GraduationCap className="h-6 w-6 text-token-cat-4-text mb-1" />
           <span className="text-xs font-bold text-token-text">{t('navStudy', language)}</span>
         </button>
+)}
       </div>
     </div>
   );

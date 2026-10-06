@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { HIDDEN_TABS } from './config/constants';
 import React, { useState, Suspense, lazy } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -60,7 +61,8 @@ const MainAppContent: React.FC = () => {
   }
 
   const renderActiveView = () => {
-    switch (currentTab) {
+    const tab = HIDDEN_TABS.includes(currentTab) ? 'today' : currentTab;
+    switch (tab) {
       case 'home':
         return <HomeScreen onNavigate={setCurrentTab} />;
       case 'today':
