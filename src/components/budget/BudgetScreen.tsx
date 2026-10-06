@@ -9,6 +9,7 @@ import {
   deleteTransaction,
   getRecurringTemplates,
 } from '../../services/budget';
+import { HIDDEN_TABS } from '../../config/constants';
 import { formatUZS, getTodayDateString } from '../../utils/format';
 import { DailyLimitBar } from './DailyLimitBar';
 import { QuickAddModal } from './QuickAddModal';
@@ -320,7 +321,7 @@ export const BudgetScreen: React.FC<BudgetScreenProps> = ({ onNavigate }) => {
         </div>
 
         {/* Link to Financial Goals */}
-        {onNavigate && (
+        {onNavigate && !HIDDEN_TABS.includes('goals') && (
           <div className="mt-3 pt-3 border-t border-token-raised flex items-center justify-between">
             <div className="flex items-center gap-1.5 text-xs text-token-muted">
               <Target className="h-3.5 w-3.5 text-token-cat-4-text" />

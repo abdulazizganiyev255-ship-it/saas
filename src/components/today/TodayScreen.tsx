@@ -663,6 +663,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
 )}
 
         {/* Goals shortcut */}
+        {!HIDDEN_TABS.includes('goals') && (
         <div className="rounded-2xl border border-token-raised bg-token-raised p-4 flex items-center justify-between sm:col-span-2">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-token-cat-4 text-token-on-accent shrink-0">
@@ -687,6 +688,7 @@ export const TodayScreen: React.FC<TodayScreenProps> = ({ onNavigate }) => {
             </button>
           )}
         </div>
+        )}
       </div>
 
       {/* 7. Health & Energy Metric Inputs */}

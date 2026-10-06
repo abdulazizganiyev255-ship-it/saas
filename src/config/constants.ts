@@ -142,7 +142,7 @@ export const PRICING_PLANS: { [key: string]: PricingPlan } = {
  * The code stays in the repo; remove an id from this list to bring a section back.
  * XP and the consistency score come only from daily habits, never from these sections.
  */
-export const HIDDEN_TABS: readonly string[] = ['gym', 'study', 'language'];
+export const HIDDEN_TABS: readonly string[] = ['gym', 'study', 'language', 'goals', 'leaderboard'];
 
 export const COHORT = {
   seats: 20,

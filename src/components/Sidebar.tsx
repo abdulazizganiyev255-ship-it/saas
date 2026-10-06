@@ -66,9 +66,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onNavigate }) => {
           <span className="font-extrabold tracking-tight text-lg" style={{ color: 'var(--text)' }}>
             {APP_NAME}
           </span>
-          <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--accent)' }}>
-            {t('step1Badge', language)}
-          </span>
         </div>
       </div>
 
