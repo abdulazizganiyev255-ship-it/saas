@@ -9,9 +9,8 @@ export interface ShareCardProps {
   score: number;
   activeDays: number;
   weeklyXP: number;
-  rank: number | null;
-  nickname: string;
-  teamName: string;
+  bestDayXP: number;
+  displayName: string;
 }
 
 const R = 222;
@@ -20,7 +19,7 @@ const FONT = "'Plus Jakarta Sans', system-ui, sans-serif";
 
 /** 1080x1350 (4:5) share image. Colors use CSS variables, resolved at export time. */
 export const ShareCard = forwardRef<SVGSVGElement, ShareCardProps>(function ShareCard(
-  { lang, weekNumber, score, activeDays, weeklyXP, rank, nickname, teamName },
+  { lang, weekNumber, score, activeDays, weeklyXP, bestDayXP, displayName },
   ref
 ) {
   const clamped = Math.max(0, Math.min(100, score));
@@ -28,7 +27,7 @@ export const ShareCard = forwardRef<SVGSVGElement, ShareCardProps>(function Shar
   const tiles = [
     { value: `${activeDays} / 7`, label: t('wrActiveDays', lang) },
     { value: String(weeklyXP), label: t('wrWeeklyXP', lang) },
-    { value: rank ? `#${rank}` : '–', label: t('shareTeamRank', lang) },
+    { value: bestDayXP > 0 ? `${bestDayXP} XP` : '–', label: t('shareBestDay', lang) },
   ];
 
   return (
@@ -93,7 +92,7 @@ export const ShareCard = forwardRef<SVGSVGElement, ShareCardProps>(function Shar
 
       {/* Footer */}
       <text x="80" y="1226" fontSize="38" fontWeight="700" style={{ fill: 'var(--text)' }}>
-        {nickname} · {tf('lbTeamOf', lang, { name: teamName })}
+        {displayName}
       </text>
       <text x="80" y="1278" fontSize="30" style={{ fill: 'var(--muted)' }}>
         {t('shareTagline', lang)}

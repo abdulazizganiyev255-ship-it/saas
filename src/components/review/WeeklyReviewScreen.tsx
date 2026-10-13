@@ -17,12 +17,11 @@ import {
   XP_DAY_CAP,
   type WeekDaily,
 } from '../../utils/weekly';
-import { MOCK_LEADERBOARD_MEMBERS } from '../../config/mockLeaderboard';
 import { ProGate } from '../common/ProGate';
 import { Modal } from '../common/Modal';
 import { ScoreRing } from './ScoreRing';
 import { ShareCard, downloadShareCardPng } from './ShareCard';
-import { Check, ChevronLeft, ChevronRight, Share2, ShieldCheck, Trophy } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, Share2, ShieldCheck } from 'lucide-react';
 
 const GOAL_MAX = 80;
 const CAT_BG = ['bg-token-cat-1', 'bg-token-cat-2', 'bg-token-cat-3', 'bg-token-cat-4'];
@@ -114,13 +113,7 @@ export const WeeklyReviewContent: React.FC<WeeklyReviewProps> = ({ onNavigate })
     return { rows, left: stats.totalIncome - stats.totalSpend };
   }, [stats, language]);
 
-  // TODO(Group 6): replace with real leaderboard data. Mock rank is for the share card layout only.
-  const me = MOCK_LEADERBOARD_MEMBERS.find((m) => m.isMe);
-  const myRank = useMemo(() => {
-    const sorted = [...MOCK_LEADERBOARD_MEMBERS].sort((a, b) => b.weeklyXP - a.weeklyXP);
-    const idx = sorted.findIndex((m) => m.isMe);
-    return idx === -1 ? null : idx + 1;
-  }, []);
+  const displayName = userProfile?.displayName || user?.displayName || '';
 
   const handleSaveGoal = () => {
     if (!user || !daily) return;
@@ -370,16 +363,6 @@ export const WeeklyReviewContent: React.FC<WeeklyReviewProps> = ({ onNavigate })
               <Share2 className="h-4 w-4" />
               {t('shareResultBtn', language)}
             </button>
-            {onNavigate && (
-              <button
-                type="button"
-                onClick={() => onNavigate('leaderboard')}
-                className="tap-target flex w-full items-center justify-center gap-2 rounded-xl border border-token-accent bg-token-card px-4 py-3 text-sm font-bold text-token-accent"
-              >
-                <Trophy className="h-4 w-4" />
-                {t('wrViewRank', language)}
-              </button>
-            )}
           </div>
 
           <Modal isOpen={shareOpen} onClose={() => setShareOpen(false)} title={t('shareResultBtn', language)}>
@@ -392,9 +375,8 @@ export const WeeklyReviewContent: React.FC<WeeklyReviewProps> = ({ onNavigate })
                   score={summary.consistency}
                   activeDays={summary.activeDays}
                   weeklyXP={summary.weeklyXP}
-                  rank={myRank}
-                  nickname={me?.nickname ?? ''}
-                  teamName={me?.teamName ?? ''}
+                  bestDayXP={summary.bestDayXP}
+                  displayName={displayName}
                 />
               </div>
               <button
