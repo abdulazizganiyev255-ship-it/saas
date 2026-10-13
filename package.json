@@ -10,7 +10,7 @@
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
     "check": "node scripts/check.mjs",
-    "test": "firebase emulators:exec --only firestore \"vitest run tests/rules.test.ts\""
+    "test": "firebase emulators:exec --only firestore,auth \"vitest run tests/\""
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

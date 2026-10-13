@@ -5,8 +5,6 @@ import {
   documentId,
   getDocs,
   getDoc,
-  deleteDoc,
-  writeBatch,
   limit,
   orderBy,
   query,
@@ -22,8 +20,9 @@ const EXPORT_PAGE_SIZE = 300;
 /**
  * Fetches every document in a subcollection, following the documentId() cursor
  * across pages so collections larger than one page are not silently truncated.
+ * Exported for tests/dataOwnership.test.ts — not used outside this module otherwise.
  */
-async function fetchAllDocs(uid: string, subcol: string): Promise<{ id: string; data: any }[]> {
+export async function fetchAllDocs(uid: string, subcol: string): Promise<{ id: string; data: any }[]> {
   const results: { id: string; data: any }[] = [];
   const colRef = collection(db, 'users', uid, subcol);
   let cursor: QueryDocumentSnapshot | null = null;
@@ -88,36 +87,17 @@ export async function exportAllUserData(uid: string): Promise<void> {
   }
 }
 
-/**
- * Remove all user subcollections using batched deletes and remove user document
- */
-export async function deleteAllUserData(uid: string): Promise<void> {
-  try {
-    // For each subcollection, repeatedly fetch and delete pages of up to 400
-    // until the collection is empty, so collections larger than one page
-    // are fully removed rather than silently left behind.
-    for (const subcol of PLANNED_COLLECTIONS) {
-      const colRef = collection(db, 'users', uid, subcol);
-      while (true) {
-        const q = query(colRef, limit(400));
-        const snap = await getDocs(q);
-        if (snap.empty) break;
-
-        const batch = writeBatch(db);
-        snap.forEach((d) => {
-          batch.delete(d.ref);
-        });
-        await batch.commit();
-
-        if (snap.size < 400) break;
-      }
-    }
-
-    // Delete user root document
-    const userDocRef = doc(db, 'users', uid);
-    await deleteDoc(userDocRef);
-  } catch (err) {
-    console.error('Failed to delete all user data:', err);
-    throw err;
-  }
-}
+// NOTE: there used to be a client-side deleteAllUserData() here. It
+// correctly paginated through every subcollection, but its final step —
+// deleting the root users/{uid} document — was ALWAYS rejected by
+// firestore.rules (`allow delete: if false;` on users/{userId}, which
+// applies to the owner too, see tests/rules.test.ts Test 18). That meant
+// "Delete Account" never actually finished: subcollections were wiped, the
+// root profile (with the user's email/displayName) was left behind, and
+// the Firebase Auth user was never deleted either (that call came after
+// the one that always threw). Account deletion now goes through the
+// deleteUserAccount Cloud Function (functions/src/deleteAccount.ts, called
+// via deleteUserAccountFn in src/services/firebase.ts), which uses the
+// Admin SDK to do the whole thing — Firestore data AND the Auth user — in
+// one place that firestore.rules has no say over. See
+// AuthContext.tsx's deleteAccount().

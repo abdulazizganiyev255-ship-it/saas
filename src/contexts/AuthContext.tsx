@@ -5,8 +5,7 @@ import {
   googleProvider,
   signInWithPopup,
   firebaseSignOut,
-  firebaseDeleteUser,
-  reauthenticateWithPopup,
+  deleteUserAccountFn,
   clearFirestorePersistence,
   doc,
   getDoc,
@@ -20,7 +19,7 @@ import {
 } from '../services/firebase';
 import type { UserProfile, UserSettings, Language } from '../types';
 import { DEFAULT_SETTINGS, DEFAULT_TIMEZONE, DEFAULT_CURRENCY } from '../config/constants';
-import { exportAllUserData, deleteAllUserData } from '../services/dataOwnership';
+import { exportAllUserData } from '../services/dataOwnership';
 import { clearUserLocalCache } from '../services/deltaSync';
 
 interface AuthContextType {
@@ -265,22 +264,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const uid = user.uid;
 
     try {
-      // 1. Delete all user subcollections and root user document in batches
-      await deleteAllUserData(uid);
+      // Deleting the root users/{uid} doc is denied by firestore.rules for
+      // everyone, including the owner (by design — see
+      // functions/src/deleteAccount.ts's comment for why). The Admin SDK,
+      // which bypasses that rule, is the only thing that can finish this:
+      // it deletes every subcollection, the root doc, and the Firebase Auth
+      // user itself, all server-side. No client-side requires-recent-login
+      // dance needed either — the Admin SDK can delete the Auth user
+      // regardless of how long ago the client last signed in.
+      await deleteUserAccountFn();
 
-      // 2. Delete user account from Firebase Authentication (handle requires-recent-login)
-      try {
-        await firebaseDeleteUser(user);
-      } catch (authErr: any) {
-        if (authErr?.code === 'auth/requires-recent-login') {
-          await reauthenticateWithPopup(user, googleProvider);
-          await firebaseDeleteUser(user);
-        } else {
-          throw authErr;
-        }
-      }
-
-      // 3. Clear all local caches for this user
+      // Clear all local caches for this user
       await clearUserLocalCache(uid);
       localStorage.clear();
       sessionStorage.clear();
