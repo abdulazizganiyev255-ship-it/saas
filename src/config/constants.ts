@@ -100,9 +100,6 @@ export const DEFAULT_EXERCISES_BY_SPLIT: { [key: string]: { name: string; sets: 
   ],
 };
 
-// TODO: Integrate payment provider checkout URL (e.g. Payme, Click, Stripe)
-export const CHECKOUT_URL = "";
-
 export interface PricingPlan {
   id: 'free' | 'pro' | 'lifetime';
   name: string;
