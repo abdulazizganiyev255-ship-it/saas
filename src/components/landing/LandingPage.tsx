@@ -4,14 +4,14 @@ import { t, type TranslationKey } from '../../i18n';
 import { APP_NAME, COHORT, CONTACT_URL, PRICING_PLANS } from '../../config/constants';
 import { WaitlistForm } from './WaitlistForm';
 import { PrivacyPage } from './PrivacyPage';
-import { Check, CloudOff, Languages, Users } from 'lucide-react';
+import { Check, CloudOff, Languages, Flame } from 'lucide-react';
 
 const PRIVACY_HASH = '#maxfiylik';
 
 const FEATURES: { icon: React.ElementType; title: TranslationKey; desc: TranslationKey }[] = [
   { icon: CloudOff, title: 'ldF1T', desc: 'ldF1D' },
   { icon: Languages, title: 'ldF2T', desc: 'ldF2D' },
-  { icon: Users, title: 'ldF3T', desc: 'ldF3D' },
+  { icon: Flame, title: 'ldF3T', desc: 'ldF3D' },
 ];
 
 const STEPS: { title: TranslationKey; desc: TranslationKey }[] = [
