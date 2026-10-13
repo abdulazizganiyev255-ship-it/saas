@@ -118,8 +118,11 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
     operationType,
     path,
   };
+  // Full details (including PII like email/uid) stay in the console for debugging only.
+  // The thrown Error carries just operation/path/message so callers never leak PII
+  // if this error is ever surfaced to a user, logged remotely, or sent to analytics.
   console.error('Firestore Error:', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
+  throw new Error(JSON.stringify({ error: errMsg, operationType, path }));
 }
 
 export {
