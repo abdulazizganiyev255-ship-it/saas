@@ -35,6 +35,24 @@ function verifySignature(rawBody: Buffer, headers: Record<string, string | undef
 }
 
 /**
+ * Result of looking up a Firebase user by email. 'unmatched' covers both
+ * "no user with this email" and "more than one user with this email" —
+ * either way we must NOT guess, and the caller has to surface it for
+ * manual review rather than silently dropping the event. A payment with
+ * no matching user means someone paid Whop and nobody got Pro; that must
+ * never pass quietly.
+ */
+export type EmailLookupResult =
+  | { status: 'matched'; uid: string }
+  | { status: 'unmatched'; reason: 'not_found'; email: string | undefined }
+  | { status: 'unmatched'; reason: 'ambiguous'; email: string | undefined; matchCount: number };
+
+// Cap on how many matching docs we fetch when checking for ambiguity. We only
+// need to know "is it exactly one or not" — fetching more than this many
+// duplicate-email user docs would be its own (separate) data problem.
+const EMAIL_LOOKUP_FETCH_LIMIT = 5;
+
+/**
  * Looks up our Firebase user by the email Whop reports for this
  * payment/membership. This is the uid<->Whop link (per the agreed
  * decision: no separate Whop metadata API call, link by email instead of
@@ -45,11 +63,12 @@ function verifySignature(rawBody: Buffer, headers: Record<string, string | undef
  * confirm the email field name/location for both payment and membership
  * events (it may be nested under data.user.email rather than data.email).
  */
-async function findUserIdByEmail(email: string | undefined): Promise<string | null> {
-  if (!email) return null;
-  const snap = await db.collection('users').where('email', '==', email).limit(1).get();
-  if (snap.empty) return null;
-  return snap.docs[0].id;
+async function findUserByEmail(email: string | undefined): Promise<EmailLookupResult> {
+  if (!email) return { status: 'unmatched', reason: 'not_found', email };
+  const snap = await db.collection('users').where('email', '==', email).limit(EMAIL_LOOKUP_FETCH_LIMIT).get();
+  if (snap.empty) return { status: 'unmatched', reason: 'not_found', email };
+  if (snap.size > 1) return { status: 'unmatched', reason: 'ambiguous', email, matchCount: snap.size };
+  return { status: 'matched', uid: snap.docs[0].id };
 }
 
 /**
@@ -63,10 +82,41 @@ async function alreadyProcessed(webhookId: string): Promise<boolean> {
   return snap.exists;
 }
 
-async function markProcessed(webhookId: string, action: string): Promise<void> {
-  await db.collection(WEBHOOK_EVENTS_COLLECTION).doc(webhookId).set({
+/**
+ * Records the outcome of a processed webhook for later auditing.
+ * `status: 'unmatched'` means a real Whop event (payment or membership
+ * change) could not be tied to a Firebase user — e.g. money came in but
+ * nobody got Pro — and is left in whopWebhookEvents for manual follow-up:
+ * find the Whop customer by email/membership id and fix the user doc or
+ * the email mismatch by hand.
+ */
+async function markProcessed(webhookId: string, action: string, lookup: EmailLookupResult): Promise<void> {
+  const base = {
     action,
+    status: lookup.status,
     processedAt: FieldValue.serverTimestamp(),
+  };
+
+  if (lookup.status === 'unmatched') {
+    logger.error('Whop webhook unmatched — no unique Firebase user for this event, Pro NOT granted', {
+      webhookId,
+      action,
+      reason: lookup.reason,
+      email: lookup.email,
+      matchCount: lookup.reason === 'ambiguous' ? lookup.matchCount : undefined,
+    });
+    await db.collection(WEBHOOK_EVENTS_COLLECTION).doc(webhookId).set({
+      ...base,
+      unmatchedReason: lookup.reason,
+      email: lookup.email ?? null,
+      matchCount: lookup.reason === 'ambiguous' ? lookup.matchCount : null,
+    });
+    return;
+  }
+
+  await db.collection(WEBHOOK_EVENTS_COLLECTION).doc(webhookId).set({
+    ...base,
+    uid: lookup.uid,
   });
 }
 
@@ -98,27 +148,26 @@ async function applyUserPlanUpdate(uid: string, fields: Partial<WhopManagedUserF
  * inspected in Cloud Logging and the mapping corrected before trusting it.
  */
 
-async function handlePaymentSucceeded(data: WhopPaymentData): Promise<void> {
-  const uid = await findUserIdByEmail(data.email);
-  if (!uid) {
-    logger.warn('payment.succeeded: no matching Firebase user for email', { email: data.email, whopPaymentId: data.id });
-    return;
+async function handlePaymentSucceeded(data: WhopPaymentData): Promise<EmailLookupResult> {
+  const lookup = await findUserByEmail(data.email);
+  if (lookup.status !== 'matched') {
+    return lookup;
   }
-  await applyUserPlanUpdate(uid, {
+  await applyUserPlanUpdate(lookup.uid, {
     paymentStatus: 'active',
     whopMembershipId: (data.membership_id as string | undefined) ?? null,
     whopCustomerId: (data.user_id as string | undefined) ?? null,
     planSource: 'whop',
   });
+  return lookup;
 }
 
-async function handleMembershipValid(data: WhopMembershipData): Promise<void> {
-  const uid = await findUserIdByEmail(data.email);
-  if (!uid) {
-    logger.warn('membership.went_valid: no matching Firebase user for email', { email: data.email, whopMembershipId: data.id });
-    return;
+async function handleMembershipValid(data: WhopMembershipData): Promise<EmailLookupResult> {
+  const lookup = await findUserByEmail(data.email);
+  if (lookup.status !== 'matched') {
+    return lookup;
   }
-  await applyUserPlanUpdate(uid, {
+  await applyUserPlanUpdate(lookup.uid, {
     plan: 'pro',
     proUntil: toProUntilTimestamp(data.valid_until),
     whopMembershipId: data.id,
@@ -126,23 +175,24 @@ async function handleMembershipValid(data: WhopMembershipData): Promise<void> {
     paymentStatus: 'active',
     planSource: 'whop',
   });
+  return lookup;
 }
 
-async function handleMembershipInvalid(data: WhopMembershipData): Promise<void> {
-  const uid = await findUserIdByEmail(data.email);
-  if (!uid) {
-    logger.warn('membership.went_invalid: no matching Firebase user for email', { email: data.email, whopMembershipId: data.id });
-    return;
+async function handleMembershipInvalid(data: WhopMembershipData): Promise<EmailLookupResult> {
+  const lookup = await findUserByEmail(data.email);
+  if (lookup.status !== 'matched') {
+    return lookup;
   }
   // Deliberately do NOT flip `plan` back to 'free' or clear `proUntil` here:
   // isPro() already treats an expired/past proUntil as not-Pro, and access
   // should revoke itself at the paid-through date rather than the instant
   // Whop marks the membership invalid (covers e.g. a failed-renewal grace
   // period). We only record paymentStatus for support/visibility.
-  await applyUserPlanUpdate(uid, {
+  await applyUserPlanUpdate(lookup.uid, {
     paymentStatus: 'canceled',
     planSource: 'whop',
   });
+  return lookup;
 }
 
 export const whopWebhook = onRequest(
@@ -176,23 +226,35 @@ export const whopWebhook = onRequest(
     }
 
     try {
+      let lookup: EmailLookupResult | null = null;
+
       switch (event.action) {
         case 'payment.succeeded':
-          await handlePaymentSucceeded(event.data as WhopPaymentData);
+          lookup = await handlePaymentSucceeded(event.data as WhopPaymentData);
           break;
         case 'membership.went_valid':
         case 'membership.activated':
-          await handleMembershipValid(event.data as WhopMembershipData);
+          lookup = await handleMembershipValid(event.data as WhopMembershipData);
           break;
         case 'membership.went_invalid':
         case 'membership.canceled':
-          await handleMembershipInvalid(event.data as WhopMembershipData);
+          lookup = await handleMembershipInvalid(event.data as WhopMembershipData);
           break;
         default:
           logger.info('Whop webhook: unhandled action, ignoring', { action: event.action });
       }
 
-      await markProcessed(webhookId, event.action);
+      if (lookup) {
+        await markProcessed(webhookId, event.action, lookup);
+      } else {
+        // Event type we don't act on at all — nothing to match, nothing to mark unmatched.
+        await db.collection(WEBHOOK_EVENTS_COLLECTION).doc(webhookId).set({
+          action: event.action,
+          status: 'ignored',
+          processedAt: FieldValue.serverTimestamp(),
+        });
+      }
+
       res.status(200).send('OK');
     } catch (err) {
       // Unexpected failure (not a bad signature, not an unhandled event type) —
