@@ -7,7 +7,7 @@ import { execSync } from 'node:child_process';
 const ROOT = process.cwd();
 // Folders already migrated to tokens. Add new folders here as they are migrated.
 const TOKEN_DIRS = ['src/components/review', 'src/components/landing', 'src/components/today', 'src/components/home', 'src/components/budget', 'src/components/common'];
-const TOKEN_FILES = ['src/components/Sidebar.tsx', 'src/components/Header.tsx'];
+const TOKEN_FILES = ['src/components/Sidebar.tsx', 'src/components/Header.tsx', 'src/components/SettingsView.tsx'];
 // Files that must never change without a deliberate decision.
 const BANNED = [
   { re: /setLogLevel\(\s*['"]silent['"]\s*\)/, msg: "setLogLevel('silent') hides permission/index errors" },

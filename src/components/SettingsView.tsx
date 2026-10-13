@@ -242,17 +242,17 @@ export const SettingsView: React.FC = () => {
     <div className="mx-auto max-w-2xl px-4 py-6 sm:py-8 space-y-6">
       {/* Title Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-token-text">
           {t('settingsTitle', language)}
         </h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-sm text-token-muted">
           {t('settingsSubtitle', language)}
         </p>
       </div>
 
       {/* Success Notification */}
       {savedSuccess && (
-        <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-3 text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+        <div className="flex items-center gap-2 rounded-xl bg-token-raised border border-token-accent/30 p-3 text-sm font-semibold text-token-accent">
           <Check className="h-4 w-4" />
           <span>{t('changesSaved', language)}</span>
         </div>
@@ -260,7 +260,7 @@ export const SettingsView: React.FC = () => {
 
       {/* Export notification */}
       {exportSuccessNotice && (
-        <div className="flex items-center gap-2 rounded-xl bg-indigo-500/10 border border-indigo-500/30 p-3 text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+        <div className="flex items-center gap-2 rounded-xl bg-token-raised border border-token-cat-4/30 p-3 text-sm font-semibold text-token-cat-4-text">
           <Download className="h-4 w-4" />
           <span>{t('exportSuccess', language)}</span>
         </div>
@@ -268,8 +268,8 @@ export const SettingsView: React.FC = () => {
 
       <form onSubmit={handleSaveSettings} className="space-y-6">
         {/* Section 1: Appearance & Localization */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4">
+        <div className="rounded-2xl border border-token-raised bg-token-card p-5 sm:p-6 shadow-sm transition-colors">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-token-muted mb-4">
             Preferences
           </h2>
 
@@ -277,27 +277,27 @@ export const SettingsView: React.FC = () => {
             {/* Language Switch */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-token-raised text-token-cat-2-text">
                   <Globe className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">
+                  <p className="text-sm font-bold text-token-text">
                     {t('languageSetting', language)}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-token-muted">
                     O'zbekcha / English
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center rounded-xl border border-slate-200 bg-slate-100/80 p-1 dark:border-slate-800 dark:bg-slate-950">
+              <div className="flex items-center rounded-xl border border-token-raised bg-token-raised p-1">
                 <button
                   type="button"
                   onClick={() => setLanguage('uz')}
                   className={`tap-target px-4 py-2 rounded-lg text-xs font-bold transition-all ${
                     language === 'uz'
-                      ? 'bg-white text-indigo-600 shadow-sm dark:bg-slate-800 dark:text-indigo-400'
-                      : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                      ? 'bg-token-card text-token-accent shadow-sm'
+                      : 'text-token-muted hover:text-token-text'
                   }`}
                 >
                   O'zbekcha
@@ -307,8 +307,8 @@ export const SettingsView: React.FC = () => {
                   onClick={() => setLanguage('en')}
                   className={`tap-target px-4 py-2 rounded-lg text-xs font-bold transition-all ${
                     language === 'en'
-                      ? 'bg-white text-indigo-600 shadow-sm dark:bg-slate-800 dark:text-indigo-400'
-                      : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                      ? 'bg-token-card text-token-accent shadow-sm'
+                      : 'text-token-muted hover:text-token-text'
                   }`}
                 >
                   English
@@ -316,32 +316,32 @@ export const SettingsView: React.FC = () => {
               </div>
             </div>
 
-            <hr className="border-slate-100 dark:border-slate-800" />
+            <hr className="border-token-raised" />
 
             {/* Theme Toggle */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-500">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-token-raised text-token-warning">
                   <Palette className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">
+                  <p className="text-sm font-bold text-token-text">
                     {t('themeSetting', language)}
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-token-muted">
                     {theme === 'dark' ? t('themeDark', language) : t('themeLight', language)}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center rounded-xl border border-slate-200 bg-slate-100/80 p-1 dark:border-slate-800 dark:bg-slate-950">
+              <div className="flex items-center rounded-xl border border-token-raised bg-token-raised p-1">
                 <button
                   type="button"
                   onClick={() => setTheme('dark')}
                   className={`tap-target flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
                     theme === 'dark'
-                      ? 'bg-slate-900 text-white shadow-sm dark:bg-slate-800 dark:text-amber-400'
-                      : 'text-slate-500 hover:text-slate-900 dark:text-slate-400'
+                      ? 'bg-token-card text-token-warning shadow-sm'
+                      : 'text-token-muted hover:text-token-text'
                   }`}
                 >
                   <Moon className="h-3.5 w-3.5" />
@@ -352,8 +352,8 @@ export const SettingsView: React.FC = () => {
                   onClick={() => setTheme('light')}
                   className={`tap-target flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
                     theme === 'light'
-                      ? 'bg-white text-amber-600 shadow-sm'
-                      : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                      ? 'bg-token-card text-token-warning shadow-sm'
+                      : 'text-token-muted hover:text-token-text'
                   }`}
                 >
                   <Sun className="h-3.5 w-3.5" />
@@ -365,21 +365,21 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {/* Section 2: Daily Targets & Limits */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4">
+        <div className="rounded-2xl border border-token-raised bg-token-card p-5 sm:p-6 shadow-sm transition-colors">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-token-muted mb-4">
             {t('targetsHeading', language)}
           </h2>
 
           <div className="space-y-4">
             {/* Daily Food Limit */}
-            <div className="rounded-xl border border-slate-200/60 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-950/50">
+            <div className="rounded-xl border border-token-raised bg-token-raised p-4">
               <div className="flex items-center gap-2 mb-1.5">
-                <Utensils className="h-4 w-4 text-emerald-500" />
-                <label htmlFor="foodLimit" className="text-sm font-bold text-slate-900 dark:text-white">
+                <Utensils className="h-4 w-4 text-token-accent" />
+                <label htmlFor="foodLimit" className="text-sm font-bold text-token-text">
                   {t('dailyFoodLimitLabel', language)}
                 </label>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+              <p className="text-xs text-token-muted mb-3">
                 {t('dailyFoodLimitDesc', language)}
               </p>
               <div className="relative">
@@ -390,10 +390,10 @@ export const SettingsView: React.FC = () => {
                   step="5000"
                   value={dailyFoodLimit}
                   onChange={(e) => setDailyFoodLimit(Number(e.target.value))}
-                  className="tap-target w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm font-bold text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                  className="tap-target w-full rounded-xl border border-token-raised bg-token-card px-3.5 py-2.5 text-sm font-bold text-token-text shadow-sm focus:border-token-accent focus:outline-none"
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                  <span className="text-xs font-semibold text-slate-400">
+                  <span className="text-xs font-semibold text-token-muted">
                     {t('currencyUzs', language)}
                   </span>
                 </div>
@@ -401,14 +401,14 @@ export const SettingsView: React.FC = () => {
             </div>
 
             {/* Sleep Target Hours */}
-            <div className="rounded-xl border border-slate-200/60 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-950/50">
+            <div className="rounded-xl border border-token-raised bg-token-raised p-4">
               <div className="flex items-center gap-2 mb-1.5">
-                <MoonStar className="h-4 w-4 text-indigo-500" />
-                <label htmlFor="sleepTarget" className="text-sm font-bold text-slate-900 dark:text-white">
+                <MoonStar className="h-4 w-4 text-token-cat-4-text" />
+                <label htmlFor="sleepTarget" className="text-sm font-bold text-token-text">
                   {t('sleepTargetLabel', language)}
                 </label>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+              <p className="text-xs text-token-muted mb-3">
                 {t('sleepTargetDesc', language)}
               </p>
               <div className="relative">
@@ -420,10 +420,10 @@ export const SettingsView: React.FC = () => {
                   step="0.5"
                   value={sleepTargetHours}
                   onChange={(e) => setSleepTargetHours(Number(e.target.value))}
-                  className="tap-target w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm font-bold text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                  className="tap-target w-full rounded-xl border border-token-raised bg-token-card px-3.5 py-2.5 text-sm font-bold text-token-text shadow-sm focus:border-token-accent focus:outline-none"
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                  <span className="text-xs font-semibold text-slate-400">
+                  <span className="text-xs font-semibold text-token-muted">
                     {t('hoursUnit', language)}
                   </span>
                 </div>
@@ -431,14 +431,14 @@ export const SettingsView: React.FC = () => {
             </div>
 
             {/* Language Target Minutes */}
-            <div className="rounded-xl border border-slate-200/60 bg-slate-50/50 p-4 dark:border-slate-800 dark:bg-slate-950/50">
+            <div className="rounded-xl border border-token-raised bg-token-raised p-4">
               <div className="flex items-center gap-2 mb-1.5">
-                <BookOpen className="h-4 w-4 text-cyan-500" />
-                <label htmlFor="langTarget" className="text-sm font-bold text-slate-900 dark:text-white">
+                <BookOpen className="h-4 w-4 text-token-cat-2-text" />
+                <label htmlFor="langTarget" className="text-sm font-bold text-token-text">
                   {t('languageTargetLabel', language)}
                 </label>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+              <p className="text-xs text-token-muted mb-3">
                 {t('languageTargetDesc', language)}
               </p>
               <div className="relative">
@@ -450,10 +450,10 @@ export const SettingsView: React.FC = () => {
                   step="5"
                   value={languageTargetMinutes}
                   onChange={(e) => setLanguageTargetMinutes(Number(e.target.value))}
-                  className="tap-target w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm font-bold text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                  className="tap-target w-full rounded-xl border border-token-raised bg-token-card px-3.5 py-2.5 text-sm font-bold text-token-text shadow-sm focus:border-token-accent focus:outline-none"
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                  <span className="text-xs font-semibold text-slate-400">
+                  <span className="text-xs font-semibold text-token-muted">
                     {t('minutesUnit', language)}
                   </span>
                 </div>
@@ -463,21 +463,21 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {/* Section: Weekly Split Planner (Gym) */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
+        <div className="rounded-2xl border border-token-raised bg-token-card p-5 sm:p-6 shadow-sm transition-colors">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-              <Dumbbell className="h-4 w-4 text-orange-500" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-token-muted flex items-center gap-1.5">
+              <Dumbbell className="h-4 w-4 text-token-warning" />
               <span>{t('weeklySplitPlannerHeading', language)}</span>
             </h2>
             <button
               type="button"
               onClick={() => setWeeklySplit(DEFAULT_WEEKLY_SPLIT)}
-              className="tap-target text-xs font-semibold text-orange-600 dark:text-orange-400 hover:underline"
+              className="tap-target text-xs font-semibold text-token-warning hover:underline"
             >
               {language === 'uz' ? 'Standart reja' : 'Reset to default'}
             </button>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+          <p className="text-xs text-token-muted mb-4">
             {language === 'uz'
               ? 'Hafta kunlari bo\'yicha mashg\'ulot turlarini belgilang (Push, Pull, Legs, Recovery...)'
               : 'Configure your weekly workout split schedule (Push, Pull, Legs, Recovery...)'}
@@ -499,9 +499,9 @@ export const SettingsView: React.FC = () => {
               return (
                 <div
                   key={day}
-                  className="flex items-center justify-between rounded-xl border border-slate-200/70 bg-slate-50/50 p-3 dark:border-slate-800 dark:bg-slate-950/40"
+                  className="flex items-center justify-between rounded-xl border border-token-raised bg-token-raised p-3"
                 >
-                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <span className="text-xs font-bold text-token-text">
                     {label}
                   </span>
                   <select
@@ -510,7 +510,7 @@ export const SettingsView: React.FC = () => {
                       const next = { ...weeklySplit, [day]: e.target.value as WorkoutSplit };
                       setWeeklySplit(next);
                     }}
-                    className="tap-target rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs font-bold text-slate-900 shadow-2xs dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                    className="tap-target rounded-lg border border-token-raised bg-token-card px-2.5 py-1 text-xs font-bold text-token-text shadow-2xs"
                   >
                     {splits.map((s) => (
                       <option key={s} value={s}>
@@ -525,14 +525,14 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {/* Section: University Week Parity Anchor */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
+        <div className="rounded-2xl border border-token-raised bg-token-card p-5 sm:p-6 shadow-sm transition-colors">
           <div className="flex items-center gap-2 mb-2">
-            <Calendar className="h-4 w-4 text-blue-500" />
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            <Calendar className="h-4 w-4 text-token-cat-2-text" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-token-muted">
               {t('parityAnchorDateLabel', language)}
             </h2>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 leading-relaxed">
+          <p className="text-xs text-token-muted mb-3 leading-relaxed">
             {language === 'uz'
               ? 'Paritet mantig\'i: Anchor sana - bu JUFT (Even) hafta deb hisoblanadigan Dushanba kuni. Har qanday sana uchun haftalar farqi juft bo\'lsa juft hafta, toq bo\'lsa toq hafta bo\'ladi.'
               : 'Week parity logic: Anchor date is a Monday that represents an EVEN week. A date is even if the number of whole weeks from anchor Monday is even, otherwise odd.'}
@@ -543,11 +543,11 @@ export const SettingsView: React.FC = () => {
               type="date"
               value={parityAnchorDate || DEFAULT_PARITY_ANCHOR_DATE}
               onChange={(e) => setParityAnchorDate(e.target.value)}
-              className="tap-target rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+              className="tap-target rounded-xl border border-token-raised bg-token-card px-3.5 py-2 text-xs font-bold text-token-text"
             />
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-token-muted">
               {language === 'uz' ? 'Anchor Dushanbasi:' : 'Anchor Monday:'}{' '}
-              <strong className="text-blue-600 dark:text-blue-400 font-bold">
+              <strong className="text-token-cat-2-text font-bold">
                 {getMondayOfDate(parityAnchorDate || DEFAULT_PARITY_ANCHOR_DATE)}
               </strong>
             </span>
@@ -555,13 +555,13 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {/* Section 3: Habits Management (Add, Rename, Reorder, Deactivate) */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
+        <div className="rounded-2xl border border-token-raised bg-token-card p-5 sm:p-6 shadow-sm transition-colors">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-              <ListTodo className="h-4 w-4 text-indigo-500" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-token-muted flex items-center gap-1.5">
+              <ListTodo className="h-4 w-4 text-token-cat-4-text" />
               <span>{t('habitsManagerHeading', language)}</span>
             </h2>
-            <span className="text-xs text-slate-400 font-bold">
+            <span className="text-xs text-token-muted font-bold">
               {habits.filter((h) => h.active).length} / {habits.length} {language === 'uz' ? 'faol' : 'active'}
             </span>
           </div>
@@ -573,12 +573,12 @@ export const SettingsView: React.FC = () => {
               value={newHabitName}
               onChange={(e) => setNewHabitName(e.target.value)}
               placeholder={t('habitNamePlaceholder', language)}
-              className="tap-target flex-1 rounded-xl border border-slate-300 bg-slate-50/50 px-3.5 py-2 text-xs font-semibold text-slate-900 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+              className="tap-target flex-1 rounded-xl border border-token-raised bg-token-raised px-3.5 py-2 text-xs font-semibold text-token-text placeholder:text-token-muted"
             />
             <button
               type="button"
               onClick={handleAddHabit}
-              className="tap-target inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-bold text-white hover:bg-indigo-700 transition"
+              className="tap-target inline-flex items-center gap-1.5 rounded-xl bg-token-accent px-4 py-2 text-xs font-bold text-token-on-accent hover:opacity-90 transition"
             >
               <Plus className="h-4 w-4" />
               <span>{t('addHabitBtn', language)}</span>
@@ -586,7 +586,7 @@ export const SettingsView: React.FC = () => {
           </div>
 
           {/* Habits List */}
-          <div className="divide-y divide-slate-100 dark:divide-slate-800 space-y-1">
+          <div className="divide-y divide-token-raised space-y-1">
             {habits.map((habit, idx) => (
               <div
                 key={habit.id}
@@ -596,13 +596,13 @@ export const SettingsView: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => handleToggleHabitActive(habit.id)}
-                    className="tap-target text-slate-400 hover:text-indigo-600"
+                    className="tap-target text-token-muted hover:text-token-accent"
                     title={habit.active ? t('habitActive', language) : t('habitInactive', language)}
                   >
                     {habit.active ? (
-                      <ToggleRight className="h-6 w-6 text-indigo-600" />
+                      <ToggleRight className="h-6 w-6 text-token-accent" />
                     ) : (
-                      <ToggleLeft className="h-6 w-6 text-slate-400" />
+                      <ToggleLeft className="h-6 w-6 text-token-muted" />
                     )}
                   </button>
 
@@ -610,7 +610,7 @@ export const SettingsView: React.FC = () => {
                     type="text"
                     value={habit.label}
                     onChange={(e) => handleRenameHabit(habit.id, e.target.value)}
-                    className={`text-xs font-bold text-slate-900 dark:text-white bg-transparent border-b border-transparent focus:border-indigo-500 focus:outline-none flex-1 truncate ${
+                    className={`text-xs font-bold text-token-text bg-transparent border-b border-transparent focus:border-token-accent focus:outline-none flex-1 truncate ${
                       !habit.active ? 'opacity-50 line-through' : ''
                     }`}
                   />
@@ -621,7 +621,8 @@ export const SettingsView: React.FC = () => {
                     type="button"
                     onClick={() => handleMoveHabit(idx, 'up')}
                     disabled={idx === 0}
-                    className="tap-target flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-20"
+                    aria-label={language === 'uz' ? 'Yuqoriga' : 'Move up'}
+                    className="tap-target flex h-7 w-7 items-center justify-center rounded-lg text-token-muted hover:bg-token-raised disabled:opacity-20"
                   >
                     <ArrowUp className="h-3.5 w-3.5" />
                   </button>
@@ -629,14 +630,16 @@ export const SettingsView: React.FC = () => {
                     type="button"
                     onClick={() => handleMoveHabit(idx, 'down')}
                     disabled={idx === habits.length - 1}
-                    className="tap-target flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-20"
+                    aria-label={language === 'uz' ? 'Pastga' : 'Move down'}
+                    className="tap-target flex h-7 w-7 items-center justify-center rounded-lg text-token-muted hover:bg-token-raised disabled:opacity-20"
                   >
                     <ArrowDown className="h-3.5 w-3.5" />
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDeleteHabit(habit.id)}
-                    className="tap-target flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400"
+                    aria-label={language === 'uz' ? "O'chirish" : 'Delete'}
+                    className="tap-target flex h-7 w-7 items-center justify-center rounded-lg text-token-muted hover:text-token-danger"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
@@ -647,29 +650,30 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {/* Section 4: Budget Categories Manager */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors space-y-4">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-            <Tag className="h-4 w-4 text-emerald-500" />
+        <div className="rounded-2xl border border-token-raised bg-token-card p-5 sm:p-6 shadow-sm transition-colors space-y-4">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-token-muted flex items-center gap-1.5">
+            <Tag className="h-4 w-4 text-token-accent" />
             <span>{t('categoriesManagerHeading', language)}</span>
           </h2>
 
           {/* Expense Categories */}
           <div>
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">
+            <label className="text-xs font-bold text-token-text block mb-2">
               {t('expenseCategoriesLabel', language)}
             </label>
             <div className="flex flex-wrap gap-2 mb-2">
               {expenseCategories.map((cat) => (
                 <span
                   key={cat}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-800 dark:bg-slate-800 dark:text-slate-200"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-token-raised px-3 py-1.5 text-xs font-semibold text-token-text"
                 >
                   <span>{cat}</span>
                   {expenseCategories.length > 1 && (
                     <button
                       type="button"
                       onClick={() => handleDeleteExpenseCategory(cat)}
-                      className="tap-target text-slate-400 hover:text-rose-600"
+                      aria-label={language === 'uz' ? "O'chirish" : 'Remove'}
+                      className="tap-target text-token-muted hover:text-token-danger"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -683,37 +687,39 @@ export const SettingsView: React.FC = () => {
                 value={newExpenseCat}
                 onChange={(e) => setNewExpenseCat(e.target.value)}
                 placeholder={t('categoryNamePlaceholder', language)}
-                className="tap-target flex-1 rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                className="tap-target flex-1 rounded-xl border border-token-raised bg-token-raised px-3.5 py-1.5 text-xs text-token-text"
               />
               <button
                 type="button"
                 onClick={handleAddExpenseCategory}
-                className="tap-target rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700"
+                aria-label={language === 'uz' ? "Qo'shish" : 'Add'}
+                className="tap-target rounded-xl bg-token-accent px-3 py-1.5 text-xs font-bold text-token-on-accent hover:opacity-90"
               >
                 +
               </button>
             </div>
           </div>
 
-          <hr className="border-slate-100 dark:border-slate-800" />
+          <hr className="border-token-raised" />
 
           {/* Income Categories */}
           <div>
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">
+            <label className="text-xs font-bold text-token-text block mb-2">
               {t('incomeCategoriesLabel', language)}
             </label>
             <div className="flex flex-wrap gap-2 mb-2">
               {incomeCategories.map((cat) => (
                 <span
                   key={cat}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-800 dark:bg-slate-800 dark:text-slate-200"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-token-raised px-3 py-1.5 text-xs font-semibold text-token-text"
                 >
                   <span>{cat}</span>
                   {incomeCategories.length > 1 && (
                     <button
                       type="button"
                       onClick={() => handleDeleteIncomeCategory(cat)}
-                      className="tap-target text-slate-400 hover:text-rose-600"
+                      aria-label={language === 'uz' ? "O'chirish" : 'Remove'}
+                      className="tap-target text-token-muted hover:text-token-danger"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -727,12 +733,13 @@ export const SettingsView: React.FC = () => {
                 value={newIncomeCat}
                 onChange={(e) => setNewIncomeCat(e.target.value)}
                 placeholder={t('categoryNamePlaceholder', language)}
-                className="tap-target flex-1 rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                className="tap-target flex-1 rounded-xl border border-token-raised bg-token-raised px-3.5 py-1.5 text-xs text-token-text"
               />
               <button
                 type="button"
                 onClick={handleAddIncomeCategory}
-                className="tap-target rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700"
+                aria-label={language === 'uz' ? "Qo'shish" : 'Add'}
+                className="tap-target rounded-xl bg-token-accent px-3 py-1.5 text-xs font-bold text-token-on-accent hover:opacity-90"
               >
                 +
               </button>
@@ -741,25 +748,25 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {/* Section 5: Recurring Templates Manager */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
+        <div className="rounded-2xl border border-token-raised bg-token-card p-5 sm:p-6 shadow-sm transition-colors">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-              <Repeat className="h-4 w-4 text-indigo-500" />
+            <h2 className="text-sm font-bold uppercase tracking-wider text-token-muted flex items-center gap-1.5">
+              <Repeat className="h-4 w-4 text-token-cat-4-text" />
               <span>{t('recurringTemplatesHeading', language)}</span>
             </h2>
             <button
               type="button"
               onClick={() => setShowAddRecurring((prev) => !prev)}
-              className="tap-target text-xs font-bold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
+              className="tap-target text-xs font-bold text-token-accent hover:opacity-80"
             >
               + {t('addRecurringTemplate', language)}
             </button>
           </div>
 
           {showAddRecurring && (
-            <div className="mb-4 rounded-xl border border-indigo-200 bg-indigo-50/50 p-4 dark:border-indigo-900 dark:bg-indigo-950/20 space-y-3">
+            <div className="mb-4 rounded-xl border border-token-accent/30 bg-token-raised p-4 space-y-3">
               <div>
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                <label className="text-xs font-semibold text-token-text block mb-1">
                   {t('recurringTitleLabel', language)}
                 </label>
                 <input
@@ -767,19 +774,19 @@ export const SettingsView: React.FC = () => {
                   value={newRecTitle}
                   onChange={(e) => setNewRecTitle(e.target.value)}
                   placeholder="e.g. Wi-Fi, Gym, Dormitory"
-                  className="tap-target w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                  className="tap-target w-full rounded-xl border border-token-raised bg-token-card px-3 py-2 text-xs text-token-text"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div>
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                  <label className="text-xs font-semibold text-token-text block mb-1">
                     {t('categoryLabel', language)}
                   </label>
                   <select
                     value={newRecCategory}
                     onChange={(e) => setNewRecCategory(e.target.value)}
-                    className="tap-target w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                    className="tap-target w-full rounded-xl border border-token-raised bg-token-card px-3 py-2 text-xs text-token-text"
                   >
                     {expenseCategories.map((c) => (
                       <option key={c} value={c}>{c}</option>
@@ -788,19 +795,19 @@ export const SettingsView: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                  <label className="text-xs font-semibold text-token-text block mb-1">
                     {t('amountLabel', language)} (UZS)
                   </label>
                   <input
                     type="number"
                     value={newRecAmount}
                     onChange={(e) => setNewRecAmount(e.target.value)}
-                    className="tap-target w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                    className="tap-target w-full rounded-xl border border-token-raised bg-token-card px-3 py-2 text-xs text-token-text"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                  <label className="text-xs font-semibold text-token-text block mb-1">
                     {t('recurringDayOfMonth', language)}
                   </label>
                   <input
@@ -809,7 +816,7 @@ export const SettingsView: React.FC = () => {
                     max="31"
                     value={newRecDay}
                     onChange={(e) => setNewRecDay(e.target.value)}
-                    className="tap-target w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+                    className="tap-target w-full rounded-xl border border-token-raised bg-token-card px-3 py-2 text-xs text-token-text"
                   />
                 </div>
               </div>
@@ -818,14 +825,14 @@ export const SettingsView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowAddRecurring(false)}
-                  className="tap-target px-3 py-1.5 text-xs text-slate-500"
+                  className="tap-target px-3 py-1.5 text-xs text-token-muted"
                 >
                   {t('cancel', language)}
                 </button>
                 <button
                   type="button"
                   onClick={handleCreateRecurringTemplate}
-                  className="tap-target rounded-xl bg-indigo-600 px-4 py-1.5 text-xs font-bold text-white hover:bg-indigo-700"
+                  className="tap-target rounded-xl bg-token-accent px-4 py-1.5 text-xs font-bold text-token-on-accent hover:opacity-90"
                 >
                   {t('saveChanges', language)}
                 </button>
@@ -834,7 +841,7 @@ export const SettingsView: React.FC = () => {
           )}
 
           {recurringTemplates.length === 0 ? (
-            <p className="text-xs text-slate-400 italic">
+            <p className="text-xs text-token-muted italic">
               {language === 'uz' ? 'Hozircha shablonlar mavjud emas.' : 'No templates configured yet.'}
             </p>
           ) : (
@@ -842,18 +849,19 @@ export const SettingsView: React.FC = () => {
               {recurringTemplates.map((r) => (
                 <div
                   key={r.id}
-                  className="flex items-center justify-between rounded-xl border border-slate-200/70 p-3 dark:border-slate-800"
+                  className="flex items-center justify-between rounded-xl border border-token-raised p-3"
                 >
                   <div>
-                    <p className="text-xs font-bold text-slate-900 dark:text-white">{r.title}</p>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-xs font-bold text-token-text">{r.title}</p>
+                    <p className="text-[11px] text-token-muted">
                       {r.category} · {formatUZS(r.amountUZS)} UZS · {r.dayOfMonth}-kun
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleDeleteRecurring(r.id)}
-                    className="tap-target text-slate-400 hover:text-rose-600"
+                    aria-label={language === 'uz' ? "O'chirish" : 'Delete'}
+                    className="tap-target text-token-muted hover:text-token-danger"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -868,36 +876,36 @@ export const SettingsView: React.FC = () => {
           <button
             type="submit"
             disabled={saving}
-            className="tap-target flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-bold text-white shadow-md shadow-indigo-600/30 hover:bg-indigo-700 disabled:opacity-50 transition"
+            className="tap-target flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-token-accent px-6 py-2.5 text-sm font-bold text-token-on-accent shadow-md hover:opacity-90 disabled:opacity-50 transition"
           >
             {saving ? t('saving', language) : t('saveChanges', language)}
           </button>
         </div>
 
         {/* Section 6: Account & Security */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm dark:border-slate-800/80 dark:bg-slate-900 transition-colors">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4">
+        <div className="rounded-2xl border border-token-raised bg-token-card p-5 sm:p-6 shadow-sm transition-colors">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-token-muted mb-4">
             {t('accountSection', language)}
           </h2>
 
-          <div className="mb-4 rounded-xl border border-slate-200/80 bg-slate-50/60 p-4 dark:border-slate-800 dark:bg-slate-950/60">
+          <div className="mb-4 rounded-xl border border-token-raised bg-token-raised p-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <p className="text-sm font-bold text-slate-900 dark:text-white">
+                <p className="text-sm font-bold text-token-text">
                   {userProfile?.displayName}
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-token-muted">
                   {userProfile?.email}
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 {userProfile?.plan === 'pro' ? (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 dark:bg-amber-950/60 dark:text-amber-400 border border-amber-200 dark:border-amber-800/40">
+                  <span className="inline-flex items-center gap-1 rounded-md bg-token-card px-2.5 py-1 text-xs font-bold text-token-cat-4-text border border-token-cat-4/30">
                     <Crown className="h-3.5 w-3.5" />
                     <span>Life OS PRO</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40">
+                  <span className="inline-flex items-center gap-1 rounded-md bg-token-card px-2.5 py-1 text-xs font-bold text-token-accent border border-token-accent/30">
                     <ShieldCheck className="h-3.5 w-3.5" />
                     <span>{t('planFree', language)}</span>
                   </span>
@@ -910,36 +918,36 @@ export const SettingsView: React.FC = () => {
             <button
               type="button"
               onClick={handleExport}
-              className="tap-target flex w-full items-center justify-center sm:justify-start gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 transition"
+              className="tap-target flex w-full items-center justify-center sm:justify-start gap-2.5 rounded-xl border border-token-raised bg-token-card px-4 py-2.5 text-sm font-semibold text-token-text hover:bg-token-raised transition"
             >
-              <Download className="h-4 w-4 text-indigo-500" />
+              <Download className="h-4 w-4 text-token-cat-2-text" />
               <span>{t('exportDataBtn', language)}</span>
             </button>
 
             <button
               type="button"
               onClick={signOut}
-              className="tap-target flex w-full items-center justify-center sm:justify-start gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 transition"
+              className="tap-target flex w-full items-center justify-center sm:justify-start gap-2.5 rounded-xl border border-token-raised bg-token-card px-4 py-2.5 text-sm font-semibold text-token-text hover:bg-token-raised transition"
             >
-              <LogOut className="h-4 w-4 text-amber-500" />
+              <LogOut className="h-4 w-4 text-token-warning" />
               <span>{t('signOut', language)}</span>
             </button>
 
             <button
               type="button"
               onClick={signOutAndClearCache}
-              className="tap-target flex w-full items-center justify-center sm:justify-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50/40 px-4 py-2.5 text-sm font-semibold text-amber-700 hover:bg-amber-100/60 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300 dark:hover:bg-amber-950/40 transition"
+              className="tap-target flex w-full items-center justify-center sm:justify-start gap-2.5 rounded-xl border border-token-warning/40 bg-token-raised px-4 py-2.5 text-sm font-semibold text-token-warning hover:opacity-90 transition"
             >
-              <Trash2 className="h-4 w-4 text-amber-500" />
+              <Trash2 className="h-4 w-4 text-token-warning" />
               <span>{language === 'en' ? 'Sign out and clear device data' : "Chiqish va qurilmadagi ma'lumotni o'chirish"}</span>
             </button>
 
             <button
               type="button"
               onClick={() => setDeleteModalOpen(true)}
-              className="tap-target flex w-full items-center justify-center sm:justify-start gap-2.5 rounded-xl border border-rose-200 bg-rose-50/40 px-4 py-2.5 text-sm font-semibold text-rose-600 hover:bg-rose-100/60 dark:border-rose-900/40 dark:bg-rose-950/20 dark:text-rose-400 dark:hover:bg-rose-950/40 transition"
+              className="tap-target flex w-full items-center justify-center sm:justify-start gap-2.5 rounded-xl border border-token-danger/40 bg-token-raised px-4 py-2.5 text-sm font-semibold text-token-danger hover:opacity-90 transition"
             >
-              <Trash2 className="h-4 w-4 text-rose-500" />
+              <Trash2 className="h-4 w-4 text-token-danger" />
               <span>{t('deleteAccountBtn', language)}</span>
             </button>
           </div>
@@ -949,9 +957,9 @@ export const SettingsView: React.FC = () => {
       {/* Delete Confirmation Modal */}
       {deleteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md rounded-2xl border border-rose-200 bg-white p-6 shadow-2xl dark:border-rose-900/50 dark:bg-slate-900 transition-all">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
+          <div className="w-full max-w-md rounded-2xl border border-token-danger/40 bg-token-card p-6 shadow-2xl transition-all">
+            <div className="flex items-center justify-between pb-3 border-b border-token-raised">
+              <div className="flex items-center gap-2 text-token-danger">
                 <AlertTriangle className="h-5 w-5" />
                 <h3 className="font-bold text-base">
                   {t('deleteModalTitle', language)}
@@ -959,13 +967,14 @@ export const SettingsView: React.FC = () => {
               </div>
               <button
                 onClick={() => setDeleteModalOpen(false)}
-                className="tap-target flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                aria-label={t('cancel', language)}
+                className="tap-target flex h-8 w-8 items-center justify-center rounded-lg text-token-muted hover:bg-token-raised"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <p className="mt-4 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p className="mt-4 text-sm text-token-muted leading-relaxed">
               {t('deleteModalText', language)}
             </p>
 
@@ -974,7 +983,7 @@ export const SettingsView: React.FC = () => {
                 type="button"
                 onClick={() => setDeleteModalOpen(false)}
                 disabled={deleting}
-                className="tap-target w-full sm:w-auto rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800 transition"
+                className="tap-target w-full sm:w-auto rounded-xl border border-token-raised px-4 py-2.5 text-sm font-semibold text-token-text hover:bg-token-raised transition"
               >
                 {t('cancel', language)}
               </button>
@@ -982,7 +991,7 @@ export const SettingsView: React.FC = () => {
                 type="button"
                 onClick={handleDeleteAccount}
                 disabled={deleting}
-                className="tap-target w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-rose-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-rose-700 disabled:opacity-50 shadow-md shadow-rose-600/30 transition"
+                className="tap-target w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-token-danger px-5 py-2.5 text-sm font-bold text-token-on-accent hover:opacity-90 disabled:opacity-50 shadow-md transition"
               >
                 {deleting ? (
                   <span>{t('deleting', language)}</span>
