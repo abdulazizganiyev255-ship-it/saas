@@ -23,7 +23,7 @@ import {
   purgeAllOldTombstones,
   runServerTimeMigration,
 } from './deltaSync';
-import { addDays } from '../utils/format';
+import { addDays, getISOWeekKey } from '../utils/format';
 
 let daysCache: { [key: string]: DayDocument } = {};
 
@@ -77,8 +77,13 @@ export function calculateDayScore(
   };
 }
 
-export function canApplyFreeze(..._args: any[]): boolean {
-  return true;
+/**
+ * A streak freeze may be applied at most once per ISO week.
+ * `freezesUsed` holds the ISO week keys (e.g. "2026-W41") already spent.
+ */
+export function canApplyFreeze(dateStr: string, freezesUsed: string[]): boolean {
+  const weekKey = getISOWeekKey(dateStr);
+  return !(freezesUsed || []).includes(weekKey);
 }
 
 /**

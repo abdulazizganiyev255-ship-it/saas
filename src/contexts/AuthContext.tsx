@@ -243,17 +243,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateUserSettings = async (newSettings: Partial<UserSettings>) => {
     if (!user || !userProfile) return;
 
-    const mergedSettings: UserSettings = {
-      ...userProfile.settings,
-      ...newSettings,
-    };
+    // Write each changed key as its own dot-path field so Firestore applies it
+    // independently of any other in-flight settings write (no stale-state clobber
+    // of sibling fields updated concurrently, e.g. via another handler in the same tick).
+    const fieldUpdates: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(newSettings)) {
+      fieldUpdates[`settings.${key}`] = value;
+    }
 
     const userDocRef = doc(db, 'users', user.uid);
     try {
-      await updateDoc(userDocRef, {
-        settings: mergedSettings,
-      });
-      setUserProfile((prev) => (prev ? { ...prev, settings: mergedSettings } : null));
+      await updateDoc(userDocRef, fieldUpdates);
+      setUserProfile((prev) =>
+        prev ? { ...prev, settings: { ...prev.settings, ...newSettings } } : null
+      );
     } catch (error) {
       handleFirestoreError(error, OperationType.UPDATE, `users/${user.uid}`);
     }

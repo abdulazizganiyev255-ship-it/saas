@@ -16,6 +16,11 @@ import {
   doc,
   orderBy,
   limit,
+  startAfter,
+  type QueryDocumentSnapshot,
+  type QueryConstraint,
+  type Query,
+  type DocumentData,
 } from 'firebase/firestore';
 import type { Transaction, RecurringTemplate } from '../types';
 import {
@@ -32,6 +37,7 @@ import {
 
 // In-memory cache for month transactions: key `${uid}_${yearMonth}`
 const monthTransactionsCache: { [key: string]: Transaction[] } = {};
+const MONTH_TX_PAGE_SIZE = 300;
 
 /**
  * Fetch transactions for a specific month (YYYY-MM) with IndexedDB Delta Sync:
@@ -75,32 +81,42 @@ export async function getMonthTransactions(
   runServerTimeMigration(uid).catch(() => {});
 
   if (!lastSyncMillis) {
-    // Initial fetch
+    // Initial fetch — paginate so months with more than one page of
+    // transactions aren't silently truncated.
     try {
-      const q = query(
-        txCol,
-        where('date', '>=', startDate),
-        where('date', '<', nextMonthStart),
-        orderBy('date', 'desc'),
-        limit(300)
-      );
-      const snap = await getDocs(q);
       const list: Transaction[] = [];
       let maxUpdatedAt = 0;
+      let cursor: QueryDocumentSnapshot | null = null;
 
-      snap.forEach((d) => {
-        const raw = d.data() as any;
-        const docMillis = getDocUpdatedAtMillis(raw);
-        if (docMillis > maxUpdatedAt) maxUpdatedAt = docMillis;
+      while (true) {
+        const baseConstraints: QueryConstraint[] = [
+          where('date', '>=', startDate),
+          where('date', '<', nextMonthStart),
+          orderBy('date', 'desc'),
+          limit(MONTH_TX_PAGE_SIZE),
+        ];
+        const q: Query<DocumentData> = cursor
+          ? query(txCol, ...baseConstraints, startAfter(cursor))
+          : query(txCol, ...baseConstraints);
+        const snap = await getDocs(q);
 
-        if (raw.deleted) return;
-        const item: Transaction = {
-          id: d.id,
-          ...raw,
-          updatedAt: raw.updatedAt ? (typeof raw.updatedAt === 'string' ? raw.updatedAt : new Date(docMillis).toISOString()) : new Date().toISOString(),
-        };
-        list.push(item);
-      });
+        snap.forEach((d) => {
+          const raw = d.data() as any;
+          const docMillis = getDocUpdatedAtMillis(raw);
+          if (docMillis > maxUpdatedAt) maxUpdatedAt = docMillis;
+
+          if (raw.deleted) return;
+          const item: Transaction = {
+            id: d.id,
+            ...raw,
+            updatedAt: raw.updatedAt ? (typeof raw.updatedAt === 'string' ? raw.updatedAt : new Date(docMillis).toISOString()) : new Date().toISOString(),
+          };
+          list.push(item);
+        });
+
+        if (snap.size < MONTH_TX_PAGE_SIZE) break;
+        cursor = snap.docs[snap.docs.length - 1];
+      }
 
       await putCachedItems(uid, 'transactions', list);
       if (maxUpdatedAt > 0) {
