@@ -110,6 +110,8 @@ export interface PricingPlan {
   priceLabel: string;
   period: string;
   popular?: boolean;
+  /** Whop checkout plan id (e.g. "plan_XXXXXXXXX"). Not set for the free plan. */
+  whopPlanId?: string;
 }
 
 export const PRICING_PLANS: { [key: string]: PricingPlan } = {
@@ -127,6 +129,8 @@ export const PRICING_PLANS: { [key: string]: PricingPlan } = {
     priceLabel: '$3.99',
     period: 'month',
     popular: true,
+    // TODO: swap in the real Whop plan id from dev.whop.com before launch.
+    whopPlanId: 'plan_PLACEHOLDER',
   },
   lifetime: {
     id: 'lifetime',
@@ -134,6 +138,8 @@ export const PRICING_PLANS: { [key: string]: PricingPlan } = {
     priceUSD: 59.99,
     priceLabel: '$59.99',
     period: 'one-time',
+    // TODO: swap in the real Whop plan id from dev.whop.com before launch.
+    whopPlanId: 'plan_PLACEHOLDER',
   },
 };
 

@@ -33,6 +33,12 @@ export interface UserSettings {
 
 export type UserPlan = 'free' | 'pro';
 
+/** Mirrors functions/src/types.ts PaymentStatus — only the whopWebhook function ever writes this. */
+export type PaymentStatus = 'none' | 'active' | 'past_due' | 'canceled' | 'expired';
+
+/** Mirrors functions/src/types.ts PlanSource — only the whopWebhook function ever writes this. */
+export type PlanSource = 'manual' | 'whop';
+
 export interface UserProfile {
   uid: string;
   displayName: string;
@@ -44,6 +50,16 @@ export interface UserProfile {
   plan: UserPlan;
   proUntil?: string | null;
   settings: UserSettings;
+  /**
+   * The fields below are Whop-managed (mirrors functions/src/types.ts
+   * WhopManagedUserFields). They are written ONLY by the whopWebhook Cloud
+   * Function — firestore.rules blocks client writes to them. Client code
+   * must only ever read them.
+   */
+  whopMembershipId?: string | null;
+  whopCustomerId?: string | null;
+  paymentStatus?: PaymentStatus;
+  planSource?: PlanSource;
 }
 
 export interface DayDocument {

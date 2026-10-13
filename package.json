@@ -16,6 +16,7 @@
     "@google/genai": "^2.4.0",
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^6.1.1",
+    "@whop/checkout": "^0.7.0",
     "firebase": "^12.19.0",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
