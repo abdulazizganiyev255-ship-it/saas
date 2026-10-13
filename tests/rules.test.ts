@@ -596,4 +596,64 @@ describe('Firestore Security Rules Unit Tests', () => {
     // Rejection: Alice attempts to delete her own root document users/alice
     await assertFails(deleteDoc(doc(aliceDb, 'users/alice')));
   });
+
+  // Test 19: Admin-only Whop fields cannot be set by the client, even on account creation
+  it('19. Client cannot self-grant whopMembershipId (or any Whop-managed field) on create', async () => {
+    const charlieDb = testEnv.authenticatedContext('whopHacker').firestore();
+
+    const baseProfile = {
+      uid: 'whopHacker',
+      displayName: 'Whop Hacker',
+      email: 'hacker@test.com',
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+      language: 'uz',
+      timezone: 'Asia/Tashkent',
+      currency: 'UZS',
+      plan: 'free',
+      proUntil: null,
+    };
+
+    // Positive Control: the exact same profile without the admin-only field succeeds
+    await assertSucceeds(setDoc(doc(charlieDb, 'users/whopHacker'), baseProfile));
+
+    // Rejection: adding whopMembershipId to an otherwise-valid create is denied —
+    // hasOnly() has no slot for it, so the whole write fails (no Pro is granted).
+    await assertFails(
+      setDoc(doc(charlieDb, 'users/whopHacker2'), {
+        ...baseProfile,
+        uid: 'whopHacker2',
+        whopMembershipId: 'mem_fake_123',
+      })
+    );
+  });
+
+  // Test 20: Mixing an admin-only field into an otherwise-legitimate update rejects the WHOLE write
+  it('20. An update that also sets paymentStatus is rejected in full, including the allowed displayName change', async () => {
+    const aliceDb = testEnv.authenticatedContext('alice').firestore();
+
+    // Positive Control: displayName alone is a normal, allowed update
+    await assertSucceeds(
+      updateDoc(doc(aliceDb, 'users/alice'), {
+        displayName: 'Alice Renamed Again',
+      })
+    );
+
+    // Rejection: same legitimate displayName change, but smuggling paymentStatus
+    // alongside it — hasOnly() rejects the entire document, so Alice cannot use
+    // an innocuous field update to sneak in a self-granted payment status.
+    await assertFails(
+      updateDoc(doc(aliceDb, 'users/alice'), {
+        displayName: 'Alice Renamed Again',
+        paymentStatus: 'active',
+      })
+    );
+
+    // Confirm the rejected write left no trace: displayName is still the last
+    // value that was actually accepted, not silently partially applied.
+    const snap = await getDoc(doc(aliceDb, 'users/alice'));
+    if (snap.data()?.displayName !== 'Alice Renamed Again') {
+      throw new Error('Expected the positive-control displayName update to have persisted');
+    }
+  });
 });

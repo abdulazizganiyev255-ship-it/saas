@@ -86,6 +86,17 @@ service cloud.firestore {
       allow get: if isOwner(userId);
       allow list: if false; // Deny user enumeration
 
+      // ADMIN-ONLY FIELDS — DO NOT ADD THESE TO hasOnly BELOW:
+      //   whopMembershipId, whopCustomerId, paymentStatus, planSource, planUpdatedAt
+      // These are written exclusively by the whopWebhook Cloud Function via the
+      // Admin SDK, which bypasses these rules entirely. Leaving them out of the
+      // client's hasOnly() list is the enforcement mechanism: any client
+      // create/update that includes one of them fails hasOnly and the ENTIRE
+      // write is rejected (not just that field). Readable via `allow get` above
+      // so the UI can show payment/plan-source status; never client-writable.
+      // See functions/src/whopWebhook.ts and tests/rules.test.ts for the tests
+      // that pin this behavior down.
+
       // Plan can ONLY be created as 'free' and proUntil must be absent or null
       allow create: if isOwner(userId)
         && request.resource.data.keys().hasOnly([
