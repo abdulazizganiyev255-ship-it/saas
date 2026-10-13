@@ -62,6 +62,18 @@ const EMAIL_LOOKUP_FETCH_LIMIT = 5;
  * TODO verify against a real payload once WHOP_WEBHOOK_SECRET is live:
  * confirm the email field name/location for both payment and membership
  * events (it may be nested under data.user.email rather than data.email).
+ *
+ * Known limitation (accepted, not fixed here): this only works if the
+ * buyer pays at Whop with the exact email their Firebase account uses.
+ * It cannot detect, only avoid causing, a misdirected grant — if someone
+ * pays using an email that happens to belong to a DIFFERENT existing
+ * Firebase user, that other account gets Pro, not the payer's. This is
+ * not a way to steal Pro for free (the payer's own account is unaffected
+ * either way, so there's nothing to gain by doing this on purpose), but
+ * it is a real support/trust issue for a legitimate mistyped-email buyer.
+ * Closing it would require the Whop metadata API call that was
+ * deliberately skipped for simplicity; revisit if this shows up as a
+ * real support ticket.
  */
 async function findUserByEmail(email: string | undefined): Promise<EmailLookupResult> {
   if (!email) return { status: 'unmatched', reason: 'not_found', email };
@@ -240,8 +252,28 @@ export const whopWebhook = onRequest(
         case 'membership.canceled':
           lookup = await handleMembershipInvalid(event.data as WhopMembershipData);
           break;
-        default:
-          logger.info('Whop webhook: unhandled action, ignoring', { action: event.action });
+        default: {
+          // A payment/membership-shaped action we don't recognize is NOT the
+          // same as an irrelevant event (e.g. "dispute.created"): it means
+          // money or a membership state changed at Whop and this function
+          // silently failed to act on it — that must be loud, not a quiet
+          // info log, or it goes unnoticed exactly like the email-mismatch
+          // case Test 19-21 / markProcessed already guard against. If this
+          // ever fires, the action name assumed in the switch above (based
+          // on docs.whop.com, never confirmed against a live payload) is
+          // wrong and needs correcting — e.g. the underscore form
+          // "membership_went_valid" instead of "membership.went_valid".
+          const isMoneyOrMembershipEvent = /^(payment|membership)[._]/.test(event.action);
+          if (isMoneyOrMembershipEvent) {
+            logger.error('Whop webhook: unrecognized payment/membership action — Pro NOT evaluated, check the real event name against functions/src/whopWebhook.ts', {
+              webhookId,
+              action: event.action,
+            });
+          } else {
+            logger.info('Whop webhook: unhandled action, ignoring', { action: event.action });
+          }
+          break;
+        }
       }
 
       if (lookup) {
