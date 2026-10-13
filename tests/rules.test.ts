@@ -656,4 +656,44 @@ describe('Firestore Security Rules Unit Tests', () => {
       throw new Error('Expected the positive-control displayName update to have persisted');
     }
   });
+
+  // Test 21: Owner CAN read the admin-only Whop fields once the webhook (Admin SDK) has set them,
+  // confirming `allow get: if isOwner(userId)` was not narrowed by the write-side lockdown in
+  // Tests 19/20 — these fields are write-protected, not read-protected.
+  it('21. Owner can read whopMembershipId/paymentStatus/planSource/proUntil after an Admin SDK write', async () => {
+    const aliceDb = testEnv.authenticatedContext('alice').firestore();
+    const bobDb = testEnv.authenticatedContext('bob').firestore();
+
+    // Simulate the whopWebhook Cloud Function (Admin SDK bypasses rules entirely)
+    // granting Pro and setting the admin-only fields on Alice's doc.
+    const proUntilTs = Timestamp.fromMillis(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      await updateDoc(doc(context.firestore(), 'users/alice'), {
+        plan: 'pro',
+        proUntil: proUntilTs,
+        whopMembershipId: 'mem_real_456',
+        whopCustomerId: 'user_whop_789',
+        paymentStatus: 'active',
+        planSource: 'whop',
+        planUpdatedAt: Timestamp.now(),
+      });
+    });
+
+    // Positive Control: Alice (owner) reads her own doc and sees every admin-only field
+    const aliceSnap = await assertSucceeds(getDoc(doc(aliceDb, 'users/alice')));
+    const data = aliceSnap.data();
+    if (
+      data?.whopMembershipId !== 'mem_real_456' ||
+      data?.whopCustomerId !== 'user_whop_789' ||
+      data?.paymentStatus !== 'active' ||
+      data?.planSource !== 'whop' ||
+      data?.plan !== 'pro' ||
+      !data?.proUntil?.isEqual(proUntilTs)
+    ) {
+      throw new Error('Expected owner read to return all Admin-SDK-written fields unchanged');
+    }
+
+    // Rejection: Bob (non-owner) still cannot read any of it — read protection is per-user, not per-field.
+    await assertFails(getDoc(doc(bobDb, 'users/alice')));
+  });
 });
