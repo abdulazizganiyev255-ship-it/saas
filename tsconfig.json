@@ -23,5 +23,9 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  // functions/ is a separate Cloud Functions package with its own
+  // tsconfig.json, node_modules, and Node (not DOM) runtime — it must never
+  // be picked up by this app's tsc run (and vice versa).
+  "exclude": ["functions", "node_modules", "dist"]
 }
