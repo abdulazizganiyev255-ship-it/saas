@@ -18,6 +18,7 @@ import type { TabType } from './types';
 import { Loader2, AlertTriangle, X } from 'lucide-react';
 
 // Code-split heavy modules for faster initial load
+const UpgradeModal = lazy(() => import('./components/common/UpgradeModal').then((m) => ({ default: m.UpgradeModal })));
 const HomeScreen = lazy(() => import('./components/home/HomeScreen').then((m) => ({ default: m.HomeScreen })));
 const BudgetScreen = lazy(() => import('./components/budget/BudgetScreen').then((m) => ({ default: m.BudgetScreen })));
 const GymScreen = lazy(() => import('./components/gym/GymScreen').then((m) => ({ default: m.GymScreen })));
@@ -32,6 +33,7 @@ const MainAppContent: React.FC = () => {
   const { user, loading } = useAuth();
   const [currentTab, setCurrentTab] = useState<TabType>('today');
   const [errorToast, setErrorToast] = useState<string | null>(null);
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
 
   React.useEffect(() => {
     const handler = (e: Event) => {
@@ -91,12 +93,12 @@ const MainAppContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors">
       {/* Desktop Left Sidebar */}
-      <Sidebar currentTab={currentTab} onNavigate={setCurrentTab} />
+      <Sidebar currentTab={currentTab} onNavigate={setCurrentTab} onUpgradeClick={() => setUpgradeModalOpen(true)} />
 
       {/* Main Content Area */}
       <div className="md:pl-64 flex flex-col min-h-screen">
         {/* Top Header */}
-        <Header currentTab={currentTab} onNavigate={setCurrentTab} />
+        <Header currentTab={currentTab} onNavigate={setCurrentTab} onUpgradeClick={() => setUpgradeModalOpen(true)} />
 
         {/* In-app PWA install notice */}
         <PWAInstallBanner />
@@ -119,6 +121,13 @@ const MainAppContent: React.FC = () => {
 
         {/* Offline connectivity toast */}
         <OfflineIndicator />
+
+        {/* Upgrade to Pro modal, opened from the Sidebar/Header "Upgrade" CTA */}
+        {upgradeModalOpen && (
+          <Suspense fallback={null}>
+            <UpgradeModal isOpen={upgradeModalOpen} onClose={() => setUpgradeModalOpen(false)} />
+          </Suspense>
+        )}
 
         {/* Error Toast for rejected writes & rule violations */}
         {errorToast && (

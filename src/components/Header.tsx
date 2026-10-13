@@ -10,7 +10,6 @@ import {
   Sun,
   LogOut,
   Settings as SettingsIcon,
-  ShieldCheck,
   ChevronDown,
   Sparkles,
   Crown,
@@ -21,9 +20,10 @@ import {
 interface HeaderProps {
   currentTab: TabType;
   onNavigate: (tab: TabType) => void;
+  onUpgradeClick: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ currentTab, onNavigate }) => {
+export const Header: React.FC<HeaderProps> = ({ currentTab, onNavigate, onUpgradeClick }) => {
   const { user, userProfile, language, setLanguage, signOut } = useAuth();
   const isPro = userProfile?.plan === 'pro';
   const { theme, toggleTheme } = useTheme();
@@ -204,17 +204,22 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onNavigate }) => {
                         <span>Life OS PRO</span>
                       </span>
                     ) : (
-                      <span
-                        className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold border"
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onUpgradeClick();
+                          setDropdownOpen(false);
+                        }}
+                        className="tap-target inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold border hover:opacity-80 transition"
                         style={{
                           backgroundColor: 'var(--raised)',
-                          borderColor: 'var(--raised)',
-                          color: 'var(--muted)',
+                          borderColor: 'var(--cat-4)',
+                          color: 'var(--cat-4-text)',
                         }}
                       >
-                        <ShieldCheck className="h-3 w-3" />
-                        <span>{t('planFree', language)}</span>
-                      </span>
+                        <Crown className="h-3 w-3" />
+                        <span>{language === 'uz' ? "Pro'ga o'tish" : 'Upgrade to Pro'}</span>
+                      </button>
                     )}
                   </div>
                 </div>

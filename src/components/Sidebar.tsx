@@ -16,7 +16,6 @@ import {
   Settings as SettingsIcon,
   Sparkles,
   LogOut,
-  ShieldCheck,
   Crown,
   Trophy,
 } from 'lucide-react';
@@ -24,9 +23,10 @@ import {
 interface SidebarProps {
   currentTab: TabType;
   onNavigate: (tab: TabType) => void;
+  onUpgradeClick: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onNavigate }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onNavigate, onUpgradeClick }) => {
   const { userProfile, language, signOut } = useAuth();
   const isPro = userProfile?.plan === 'pro';
 
@@ -142,10 +142,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onNavigate }) => {
                     <span>Life OS PRO</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1" style={{ color: 'var(--muted)' }}>
-                    <ShieldCheck className="h-3 w-3" />
-                    <span>{t('planFree', language)}</span>
-                  </span>
+                  <button
+                    type="button"
+                    onClick={onUpgradeClick}
+                    className="tap-target inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 -mx-1.5 hover:opacity-80 transition"
+                    style={{ color: 'var(--cat-4-text)' }}
+                  >
+                    <Crown className="h-3 w-3" />
+                    <span>{language === 'uz' ? "Pro'ga o'tish" : 'Upgrade to Pro'}</span>
+                  </button>
                 )}
               </div>
             </div>
